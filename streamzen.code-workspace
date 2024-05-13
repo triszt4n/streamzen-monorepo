@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "client"
+		},
+		{
+			"path": "server"
+		},
+		{
+			"path": "infra"
+		},
+		{
+			"path": "lambdas/job-finalizer"
+		},
+		{
+			"path": "lambdas/job-starter"
+		}
+	],
+	"settings": {}
+}
