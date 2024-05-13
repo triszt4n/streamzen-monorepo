@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="1011.6251"
+   height="628.44922"
+   viewBox="0 0 30.348754 18.853477"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="streamzen-notext-logo.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="0.10429825"
+     inkscape:cx="-488.98232"
+     inkscape:cy="67.11522"
+     inkscape:window-width="1312"
+     inkscape:window-height="449"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <g
+     id="g3">
+    <path
+       d="M 12.343,14.159301 10.682545,12.647198 C 9.8683197,11.905544 9.4611534,11.53477 8.9997197,11.394338 c -0.406417,-0.123734 -0.8404066,-0.123734 -1.2467808,0 C 7.291505,11.53477 6.884361,11.905544 6.070049,12.647198 L 3.002247,15.425006 M 12.343,14.159301 12.681128,13.851357 c 0.814332,-0.741655 1.221499,-1.112428 1.682825,-1.25286 0.406417,-0.123734 0.84045,-0.123734 1.24676,0 0.461433,0.140432 0.8686,0.511205 1.682932,1.25286 l 1.232417,1.072826 M 12.343,14.159301 15.982022,17.453666 M 15.931822,6.26537 c 0,1.182324 -0.958404,2.140727 -2.140727,2.140727 -1.182324,0 -2.140727,-0.958403 -2.140727,-2.140727 0,-1.182291 0.958403,-2.140727 2.140727,-2.140727 1.182323,0 2.140727,0.958436 2.140727,2.140727 z"
+       stroke="#000000"
+       stroke-width="2.14073"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       id="path1"
+       sodipodi:nodetypes="ccccccccccccccsssss" />
+    <path
+       d="m 19.402767,9.426738 v 7.213504 c 0,0.541012 -0.442648,0.983659 -0.98366,0.983659 H 2.213234 c -0.541012,0 -0.983659,-0.442647 -0.983659,-0.983659 V 2.213234 c 0,-0.541012 0.442647,-0.983659 0.983659,-0.983659 h 16.205873 c 0.541012,0 0.98366,0.442647 0.98366,0.983659 z m 0.0071,0 8.096111,-6.852664 c 0.640471,-0.535548 1.613201,-0.07651 1.613201,0.755778 v 12.194045 c 0,0.833925 -0.97273,1.289687 -1.613201,0.755779 z"
+       stroke="#000000"
+       stroke-width="2.45915"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       id="path1-8"
+       sodipodi:nodetypes="csssssssscccsscc" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:5.76px;font-family:inter;-inkscape-font-specification:'inter Bold';letter-spacing:-0.012px;fill:none;stroke:#1a1a1a;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.2, 2.4"
+     x="-2.0922804"
+     y="-0.4033469"
+     id="text1"><tspan
+       sodipodi:role="line"
+       id="tspan1"
+       style="letter-spacing:-0.012px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.2"
+       x="-2.0922804"
+       y="-0.4033469" /><tspan
+       sodipodi:role="line"
+       style="letter-spacing:-0.012px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.2"
+       x="-2.0922804"
+       y="6.7966533"
+       id="tspan2" /></text>
+</svg>

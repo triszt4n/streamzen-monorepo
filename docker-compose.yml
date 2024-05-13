@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=streamzen
+    restart: always
+    volumes:
+      - streamzen_db_folder:/var/lib/postgresql/data
+    networks:
+      - streamzen_network
+    ports:
+      - '5432:5432'
+networks:
+  streamzen_network:
+volumes:
+  streamzen_db_folder:
+    external: true
