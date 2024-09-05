@@ -598,7 +598,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/s3-request-presigner@npm:^3.569.0":
+"@aws-sdk/s3-request-presigner@npm:3.569.0":
   version: 3.569.0
   resolution: "@aws-sdk/s3-request-presigner@npm:3.569.0"
   dependencies:
@@ -1007,16 +1007,6 @@ __metadata:
     "@jridgewell/resolve-uri": "npm:^3.1.0"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
   checksum: 10c0/3d1ce6ebc69df9682a5a8896b414c6537e428a1d68b02fcc8363b04284a8ca0df04d0ee3013132252ab14f2527bc13bea6526a912ecb5658f0e39fd2860b4df4
-  languageName: node
-  linkType: hard
-
-"@next-auth/prisma-adapter@npm:1.0.7":
-  version: 1.0.7
-  resolution: "@next-auth/prisma-adapter@npm:1.0.7"
-  peerDependencies:
-    "@prisma/client": ">=2.26.0 || >=3"
-    next-auth: ^4
-  checksum: 10c0/ed69c7d1900bcb0081b8fb078e7bbe5a237c084ade78b79e97951e940b9e3110e85fc2887b01a17aecf2e4bc3364c97256f20873012669c9336613a5ee082526
   languageName: node
   linkType: hard
 
@@ -2490,64 +2480,6 @@ __metadata:
   version: 0.1.1
   resolution: "@pkgr/core@npm:0.1.1"
   checksum: 10c0/3f7536bc7f57320ab2cf96f8973664bef624710c403357429fbf680a5c3b4843c1dbd389bb43daa6b1f6f1f007bb082f5abcb76bb2b5dc9f421647743b71d3d8
-  languageName: node
-  linkType: hard
-
-"@prisma/client@npm:5.13.0":
-  version: 5.13.0
-  resolution: "@prisma/client@npm:5.13.0"
-  peerDependencies:
-    prisma: "*"
-  peerDependenciesMeta:
-    prisma:
-      optional: true
-  checksum: 10c0/19a0d08237fd7bae6009417476dc3588df77102131e3c8df01a024e5dee78417a8079d5a3dbbb3ffee7b4117067a9c10912f5084a3a40884de8fde5314fb1227
-  languageName: node
-  linkType: hard
-
-"@prisma/debug@npm:5.13.0":
-  version: 5.13.0
-  resolution: "@prisma/debug@npm:5.13.0"
-  checksum: 10c0/9e3a84e473a77ae16adeeae3de27ec9f8431bffdd563fd7441f42596c6f6a7a766832c3c17a84a8d89e4133028b361dd274b48291425f388b4fb4575093cf3ed
-  languageName: node
-  linkType: hard
-
-"@prisma/engines-version@npm:5.13.0-23.b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b":
-  version: 5.13.0-23.b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b
-  resolution: "@prisma/engines-version@npm:5.13.0-23.b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b"
-  checksum: 10c0/459f991a8f05da8c3b69cb36148537658b8fbaa3d83de32fd35e293dbc978a2fd49d2a140921967dfd76dd942197f08af1ba89d218c09e46db96b917eef02f92
-  languageName: node
-  linkType: hard
-
-"@prisma/engines@npm:5.13.0":
-  version: 5.13.0
-  resolution: "@prisma/engines@npm:5.13.0"
-  dependencies:
-    "@prisma/debug": "npm:5.13.0"
-    "@prisma/engines-version": "npm:5.13.0-23.b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b"
-    "@prisma/fetch-engine": "npm:5.13.0"
-    "@prisma/get-platform": "npm:5.13.0"
-  checksum: 10c0/533772a7ed24daf515b74fc96123a3eec028a66a2cdee60e9509dc0308f572f91185746e90050a8b3ff4366465a5ef82bf7c015b6f600090add3d672f7bdaf1d
-  languageName: node
-  linkType: hard
-
-"@prisma/fetch-engine@npm:5.13.0":
-  version: 5.13.0
-  resolution: "@prisma/fetch-engine@npm:5.13.0"
-  dependencies:
-    "@prisma/debug": "npm:5.13.0"
-    "@prisma/engines-version": "npm:5.13.0-23.b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b"
-    "@prisma/get-platform": "npm:5.13.0"
-  checksum: 10c0/44bd142d11a826b98974b6187d43490653a0bf47e63ce4db1f1dfda3cf254721102c796e7984e18ecfbec709be30d9b2e77f8dcb685d9a47670ac7c6f833778a
-  languageName: node
-  linkType: hard
-
-"@prisma/get-platform@npm:5.13.0":
-  version: 5.13.0
-  resolution: "@prisma/get-platform@npm:5.13.0"
-  dependencies:
-    "@prisma/debug": "npm:5.13.0"
-  checksum: 10c0/c90cf7738fe886f096cd4563938b2f05d3ebd94b1391ade81ae9b9d863f6ab34082d12be97e7ae6b649f37278dc0b1c65c3c0aa113d1276a942798a2c8ac469b
   languageName: node
   linkType: hard
 
@@ -4379,12 +4311,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.12.8":
-  version: 20.12.8
-  resolution: "@types/node@npm:20.12.8"
+"@types/node@npm:20.16.5":
+  version: 20.16.5
+  resolution: "@types/node@npm:20.16.5"
   dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 10c0/840002d20654e38a9af8cdffa215598fdb28ac4f96c5701ed672ec365ed6ccc66da299edddaa409baf13cd71bbf1128901f633b5e44e070fc236e26415805b78
+    undici-types: "npm:~6.19.2"
+  checksum: 10c0/6af7994129815010bcbc4cf8221865559c8116ff43e74a6549525c2108267596fc2d18aff5d5ecfe089fb60a119f975631343e2c65c52bfa0955ed9dc56733d6
   languageName: node
   linkType: hard
 
@@ -5696,31 +5628,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"filepond-plugin-file-validate-size@npm:2.2.8":
-  version: 2.2.8
-  resolution: "filepond-plugin-file-validate-size@npm:2.2.8"
-  peerDependencies:
-    filepond: ">=3.1.2 <5.x"
-  checksum: 10c0/2eb79294214abf3d46e4d02e1375c6b1a79584916a12cfdf1cf2875948c4167d376addb6f7f828f459d0a1a19289165271c92659a4e205ebc047776d309cb366
-  languageName: node
-  linkType: hard
-
-"filepond-plugin-image-preview@npm:4.6.12":
-  version: 4.6.12
-  resolution: "filepond-plugin-image-preview@npm:4.6.12"
-  peerDependencies:
-    filepond: ">=4.x <5.x"
-  checksum: 10c0/3947b9f2b00420d43ab9025ceba59666b034693579e0770eb26977b18552effea230c1ddc2baccf72107f847b7f7df6cb9dd5985d001dbe06eb76221ad72e5b4
-  languageName: node
-  linkType: hard
-
-"filepond@npm:4.31.1":
-  version: 4.31.1
-  resolution: "filepond@npm:4.31.1"
-  checksum: 10c0/201cb5b978882d7b1929ece3c17a08db6575a6f692953b602fb48bf6bf1d0d1b3a54615712cff08d39d607c144d072d1a8b3d15f72bc3142666b756d70f76ea8
-  languageName: node
-  linkType: hard
-
 "fill-range@npm:^7.0.1":
   version: 7.0.1
   resolution: "fill-range@npm:7.0.1"
@@ -6105,50 +6012,6 @@ __metadata:
   checksum: 10c0/703f7f45ffb2a27fb2c5a8db0c32e7dee66b33a225d28e8db4e1be6474795f606686a6e3bcc50e1aa12f2042db4c9d4a7d60af3250511de74620fbed052ea4cd
   languageName: node
   linkType: hard
-
-"imagezen@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "imagezen@workspace:."
-  dependencies:
-    "@aws-sdk/client-s3": "npm:3.569.0"
-    "@aws-sdk/s3-request-presigner": "npm:^3.569.0"
-    "@heroicons/react": "npm:2.1.3"
-    "@next-auth/prisma-adapter": "npm:1.0.7"
-    "@next/eslint-plugin-next": "npm:14.2.3"
-    "@nextui-org/react": "npm:2.3.6"
-    "@prisma/client": "npm:5.13.0"
-    "@tailwindcss/typography": "npm:0.5.13"
-    "@types/node": "npm:20.12.8"
-    "@types/react": "npm:18.3.1"
-    "@typescript-eslint/eslint-plugin": "npm:7.8.0"
-    "@typescript-eslint/parser": "npm:7.8.0"
-    autoprefixer: "npm:10.4.19"
-    eslint: "npm:9.2.0"
-    eslint-config-prettier: "npm:9.1.0"
-    eslint-plugin-prettier: "npm:5.1.3"
-    eslint-plugin-react: "npm:7.34.1"
-    eslint-plugin-react-hooks: "npm:4.6.2"
-    filepond: "npm:4.31.1"
-    filepond-plugin-file-validate-size: "npm:2.2.8"
-    filepond-plugin-image-preview: "npm:4.6.12"
-    framer-motion: "npm:11.1.7"
-    next: "npm:14.2.3"
-    next-auth: "npm:4.24.7"
-    next-themes: "npm:0.3.0"
-    postcss: "npm:8.4.38"
-    prettier: "npm:3.2.5"
-    prettier-plugin-tailwindcss: "npm:0.5.14"
-    prisma: "npm:5.13.0"
-    react: "npm:18.3.1"
-    react-dom: "npm:18.3.1"
-    react-filepond: "npm:7.1.2"
-    react-hook-form: "npm:7.51.4"
-    styled-components: "npm:6.1.9"
-    tailwindcss: "npm:3.4.3"
-    typescript: "npm:5.4.5"
-    yet-another-react-lightbox: "npm:^3.17.5"
-  languageName: unknown
-  linkType: soft
 
 "import-fresh@npm:^3.2.1":
   version: 3.3.0
@@ -7519,17 +7382,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:5.13.0":
-  version: 5.13.0
-  resolution: "prisma@npm:5.13.0"
-  dependencies:
-    "@prisma/engines": "npm:5.13.0"
-  bin:
-    prisma: build/index.js
-  checksum: 10c0/226e03b9d3bded1b0b186f40702f971dc34745d67ef4518897380d5a8ba5ce0c438190b3b1d807db7cca3d06b02d89a344e3fc064626c8b448823d7adce07044
-  languageName: node
-  linkType: hard
-
 "proc-log@npm:^3.0.0":
   version: 3.0.0
   resolution: "proc-log@npm:3.0.0"
@@ -7588,17 +7440,6 @@ __metadata:
   peerDependencies:
     react: ^18.3.1
   checksum: 10c0/a752496c1941f958f2e8ac56239172296fcddce1365ce45222d04a1947e0cc5547df3e8447f855a81d6d39f008d7c32eab43db3712077f09e3f67c4874973e85
-  languageName: node
-  linkType: hard
-
-"react-filepond@npm:7.1.2":
-  version: 7.1.2
-  resolution: "react-filepond@npm:7.1.2"
-  peerDependencies:
-    filepond: ">=3.7.x < 5.x"
-    react: 16 - 18
-    react-dom: 16 - 18
-  checksum: 10c0/88308089de4e0f5105c0a24a0844842bb107573507a45e1ae59ab6e4359a77fb052c660a0e203ead83d19b47f87592484f206b34b9459ddc7ab11e0fa569629c
   languageName: node
   linkType: hard
 
@@ -8036,6 +7877,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"streamzen-frontend-app@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "streamzen-frontend-app@workspace:."
+  dependencies:
+    "@aws-sdk/client-s3": "npm:3.569.0"
+    "@aws-sdk/s3-request-presigner": "npm:3.569.0"
+    "@heroicons/react": "npm:2.1.3"
+    "@next/eslint-plugin-next": "npm:14.2.3"
+    "@nextui-org/react": "npm:2.3.6"
+    "@tailwindcss/typography": "npm:0.5.13"
+    "@types/node": "npm:20.16.5"
+    "@types/react": "npm:18.3.1"
+    "@typescript-eslint/eslint-plugin": "npm:7.8.0"
+    "@typescript-eslint/parser": "npm:7.8.0"
+    autoprefixer: "npm:10.4.19"
+    eslint: "npm:9.2.0"
+    eslint-config-prettier: "npm:9.1.0"
+    eslint-plugin-prettier: "npm:5.1.3"
+    eslint-plugin-react: "npm:7.34.1"
+    eslint-plugin-react-hooks: "npm:4.6.2"
+    framer-motion: "npm:11.1.7"
+    next: "npm:14.2.3"
+    next-auth: "npm:4.24.7"
+    next-themes: "npm:0.3.0"
+    postcss: "npm:8.4.38"
+    prettier: "npm:3.2.5"
+    prettier-plugin-tailwindcss: "npm:0.5.14"
+    react: "npm:18.3.1"
+    react-dom: "npm:18.3.1"
+    react-hook-form: "npm:7.51.4"
+    styled-components: "npm:6.1.9"
+    tailwindcss: "npm:3.4.3"
+    typescript: "npm:5.4.5"
+  languageName: unknown
+  linkType: soft
+
 "string-width-cjs@npm:string-width@^4.2.0, string-width@npm:^4.1.0":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
@@ -8460,10 +8337,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~5.26.4":
-  version: 5.26.5
-  resolution: "undici-types@npm:5.26.5"
-  checksum: 10c0/bb673d7876c2d411b6eb6c560e0c571eef4a01c1c19925175d16e3a30c4c428181fb8d7ae802a261f283e4166a0ac435e2f505743aa9e45d893f9a3df017b501
+"undici-types@npm:~6.19.2":
+  version: 6.19.8
+  resolution: "undici-types@npm:6.19.8"
+  checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
   languageName: node
   linkType: hard
 
@@ -8721,16 +8598,6 @@ __metadata:
   bin:
     yaml: bin.mjs
   checksum: 10c0/280ddb2e43ffa7d91a95738e80c8f33e860749cdc25aa6d9e4d350a28e174fd7e494e4aa023108aaee41388e451e3dc1292261d8f022aabcf90df9c63d647549
-  languageName: node
-  linkType: hard
-
-"yet-another-react-lightbox@npm:^3.17.5":
-  version: 3.17.5
-  resolution: "yet-another-react-lightbox@npm:3.17.5"
-  peerDependencies:
-    react: ">=16.8.0"
-    react-dom: ">=16.8.0"
-  checksum: 10c0/cc732c8a8a77fd74e7b1413dcb73716bb73d990e439e45285e391e13f4dfd6ebe970878203ae2aadde07e8722577ff3f0f8621906ce2bdab9ac6360c0cf77a5e
   languageName: node
   linkType: hard
 
