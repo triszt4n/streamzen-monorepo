@@ -1,11 +1,11 @@
-name: API image upload to ECR
+name: Deploy server app to ECR
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'server/**'
+      - "server/**"
 
 jobs:
   build:
