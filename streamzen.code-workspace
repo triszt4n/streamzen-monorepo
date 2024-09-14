@@ -17,6 +17,9 @@
 		},
 		{
 			"path": "infra-bootstrap"
+		},
+		{
+			"path": ".github"
 		}
 	],
 	"settings": {}
