@@ -3,7 +3,7 @@ variable "environment" {
 }
 
 variable "domain_name" {
-  type = string  
+  type = string
 }
 
 variable "web_acl_arn" {
