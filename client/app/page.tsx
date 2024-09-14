@@ -1,7 +1,6 @@
 'use client'
 
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import { Role } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import ActionButton from './components/ActionButton'
 import Container from './components/Container'
@@ -99,8 +98,7 @@ export default function Home() {
                   key={album.id}
                   album={{
                     ...album,
-                    author: album?.users?.find((u) => u.role === Role.ADMIN)
-                      ?.user,
+                    author: album?.users?.find(() => true)?.user,
                   }}
                   firstPhoto={album.photos[0]}
                 />

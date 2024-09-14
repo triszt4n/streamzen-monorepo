@@ -1,4 +1,4 @@
-# Image:zen
+# Stream:zen
 
 ## Create a .env file
 
