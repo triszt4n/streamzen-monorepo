@@ -14,6 +14,9 @@
 		},
 		{
 			"path": "lambdas/job-starter"
+		},
+		{
+			"path": "infra-bootstrap"
 		}
 	],
 	"settings": {}
