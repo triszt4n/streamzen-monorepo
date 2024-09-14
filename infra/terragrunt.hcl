@@ -9,7 +9,7 @@ locals {
 }
 
 terraform {
-  source = "infra/"
+  source = "./streamzen-core"
 }
 
 generate "provider" {
