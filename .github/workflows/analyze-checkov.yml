@@ -3,7 +3,7 @@ name: Checkov scan on PR
 on:
   pull_request:
     paths:
-     - 'infra/**'
+      - "infra/**"
 
 permissions:
   id-token: write
@@ -52,7 +52,7 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
+          comment-author: "github-actions[bot]"
           body-includes: Checkov found
 
       - name: Create or update comment
