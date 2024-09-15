@@ -2,20 +2,15 @@ import {
   Delete,
   Get,
   NotFoundException,
-  Param,
-  ParseIntPipe,
   Post,
+  UseGuards
 } from '@nestjs/common';
-import { User } from '@prisma/client';
-import { AuthorizationSubject } from 'src/auth/decorator/authorization-subject.decorator';
-import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
-import { JwtAuth } from 'src/auth/decorator/jwt-auth.decorator';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { ApiController } from 'src/utils/api-controller.decorator';
 import { UsersService } from './users.service';
 
-@JwtAuth()
-@AuthorizationSubject('User')
 @ApiController('users')
+@UseGuards(JwtGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -24,19 +19,13 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get('profile')
-  async findProfile(@CurrentUser() user: User) {
-    return this.usersService.profile(user);
-  }
-
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(id: string) {
     return this.usersService.findOne(id);
   }
 
   @Post(':id/promote')
-  // @RequiredPermission(Permissions.PromoteUser)
-  async promote(@Param('id', ParseIntPipe) id: number) {
+  async promote(id: string) {
     try {
       return this.usersService.promoteUser(id, 'ADMIN');
     } catch {
@@ -45,8 +34,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  // @RequiredPermission(Permissions.Delete)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(id: string) {
     try {
       return this.usersService.remove(id);
     } catch {
