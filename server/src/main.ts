@@ -45,7 +45,8 @@ async function bootstrap() {
   }
 
   app.enableCors({
-    origin: isProduction ? configService.get<string>('FRONTEND_CALLBACK') : '*',
+    origin: configService.get<string>('FRONTEND_CALLBACK'),
+    credentials: true,
   });
   app.enableShutdownHooks();
 

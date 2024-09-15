@@ -1,4 +1,4 @@
-import { Get, Redirect, Res, UseGuards } from '@nestjs/common';
+import { Get, Logger, Redirect, Res, UseGuards } from '@nestjs/common';
 import { ApiFoundResponse, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ApiController } from 'src/utils/api-controller.decorator';
@@ -15,6 +15,8 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
+  logger = new Logger(AuthController.name);
+
   @UseGuards(AuthSchGuard)
   @Get('login')
   @ApiFoundResponse({
@@ -24,7 +26,6 @@ export class AuthController {
 
   @Get('callback')
   @UseGuards(AuthSchGuard)
-  @Redirect(process.env.FRONTEND_CALLBACK, 302)
   @ApiFoundResponse({
     description: 'Redirects to the frontend and sets cookie with JWT.',
   })
@@ -34,13 +35,13 @@ export class AuthController {
     res.cookie('jwt', jwt, {
       httpOnly: true,
       secure: true,
-      domain: getHostFromUrl(process.env.FRONTEND_CALLBACK),
+      domain: process.env.NODE_ENV === "production" ? getHostFromUrl(process.env.FRONTEND_CALLBACK) : undefined,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
+    res.redirect(302, process.env.FRONTEND_CALLBACK + '?authenticated=true');
   }
 
   @Get('logout')
-  @Redirect(process.env.FRONTEND_CALLBACK, 302)
   @ApiFoundResponse({
     description: 'Redirects to the frontend and clears the JWT cookie.',
   })
@@ -48,11 +49,13 @@ export class AuthController {
     res.clearCookie('jwt', {
       domain: getHostFromUrl(process.env.FRONTEND_CALLBACK),
     });
+    res.redirect(302, process.env.FRONTEND_CALLBACK);
   }
 
   @Get('me')
   @UseGuards(JwtGuard)
   me(@CurrentUser() user: UserDto): UserDto {
+    this.logger.log(`User requested:`, user);
     return user;
   }
 }
