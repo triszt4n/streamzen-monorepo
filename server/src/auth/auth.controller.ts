@@ -1,37 +1,61 @@
-import { Get, Redirect, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { User } from '@prisma/client';
-import { AuthService } from './auth.service';
-import { CurrentUser } from './decorator/current-user.decorator';
-import { JwtAuth } from './decorator/jwt-auth.decorator';
-import { JwtUserDto } from './dto/jwtUser.dto';
+import { Get, Logger, Redirect, Res, UseGuards } from '@nestjs/common';
+import { ApiFoundResponse, ApiQuery } from '@nestjs/swagger';
+import { Response } from 'express';
 import { ApiController } from 'src/utils/api-controller.decorator';
-import { ConfigService } from '@nestjs/config';
+import { getHostFromUrl } from 'src/utils/auth.utils';
+import { AuthService } from './auth.service';
+import { UserDto } from './dto/user.dto';
+import { AuthSchGuard } from './guards/authsch.guard';
+import { JwtGuard } from './guards/jwt.guard';
+import { CurrentUser } from '@kir-dev/passport-authsch';
 
 @ApiController('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
   ) {}
 
-  @UseGuards(AuthGuard('authsch'))
+  logger = new Logger(AuthController.name);
+
+  @UseGuards(AuthSchGuard)
   @Get('login')
+  @ApiFoundResponse({
+    description: 'Redirects to the AuthSch login page.',
+  })
   login() {}
 
   @Get('callback')
-  @UseGuards(AuthGuard('authsch'))
-  @Redirect()
-  oauthRedirect(@CurrentUser() user: User) {
-    const { jwt } = this.authService.login(user);
-    return {
-      url: `${this.configService.get('FRONTEND_HOST')}/welcome?jwt=${jwt}`,
-    };
+  @UseGuards(AuthSchGuard)
+  @ApiFoundResponse({
+    description: 'Redirects to the frontend and sets cookie with JWT.',
+  })
+  @ApiQuery({ name: 'code', required: true })
+  oauthRedirect(@CurrentUser() user: UserDto, @Res() res: Response): void {
+    const jwt = this.authService.login(user);
+    res.cookie('jwt', jwt, {
+      httpOnly: true,
+      secure: true,
+      domain: process.env.NODE_ENV === "production" ? getHostFromUrl(process.env.FRONTEND_CALLBACK) : undefined,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+    res.redirect(302, process.env.FRONTEND_CALLBACK + '?authenticated=true');
+  }
+
+  @Get('logout')
+  @ApiFoundResponse({
+    description: 'Redirects to the frontend and clears the JWT cookie.',
+  })
+  logout(@Res() res: Response): void {
+    res.clearCookie('jwt', {
+      domain: getHostFromUrl(process.env.FRONTEND_CALLBACK),
+    });
+    res.redirect(302, process.env.FRONTEND_CALLBACK);
   }
 
   @Get('me')
-  @JwtAuth()
-  me(@CurrentUser() user: JwtUserDto): JwtUserDto {
+  @UseGuards(JwtGuard)
+  me(@CurrentUser() user: UserDto): UserDto {
+    this.logger.log(`User requested:`, user);
     return user;
   }
 }

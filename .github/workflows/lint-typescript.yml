@@ -1,0 +1,22 @@
+name: Lint TS on PR
+
+on:
+  pull_request:
+    paths:
+      - "server/**"
+      - "client/**"
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  format:
+    name: TG hclfmt & TF fmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: echo "Hello world"

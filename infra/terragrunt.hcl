@@ -48,4 +48,7 @@ EOF
 inputs = {
   environment = local.environment
   region      = local.provider_main_region
+
+  domain_name     = "stream.trisz.hu"
+  api_domain_name = "api.stream.trisz.hu"
 }

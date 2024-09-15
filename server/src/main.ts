@@ -4,12 +4,11 @@ import {
   RequestMethod,
   ValidationPipe,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -46,7 +45,8 @@ async function bootstrap() {
   }
 
   app.enableCors({
-    origin: isProduction ? configService.get<string>('CLIENT_BASEURL') : '*',
+    origin: configService.get<string>('FRONTEND_CALLBACK'),
+    credentials: true,
   });
   app.enableShutdownHooks();
 
