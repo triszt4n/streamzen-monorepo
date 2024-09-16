@@ -32,7 +32,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { MainLayout } from "@/layouts/main.layout";
 
-export function CollectionsPage() {
+export default function CollectionsPage() {
   return (
     <MainLayout
       currentHref="/collections"

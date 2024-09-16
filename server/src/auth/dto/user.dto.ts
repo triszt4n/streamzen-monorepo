@@ -2,5 +2,8 @@ import { IsString } from "class-validator";
 
 export class UserDto {
   @IsString()
-  displayName: string;
+  fullName: string;
+
+  @IsString()
+  email: string;
 }

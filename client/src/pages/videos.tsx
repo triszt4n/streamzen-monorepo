@@ -32,7 +32,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { MainLayout } from "@/layouts/main.layout";
 
-export function VideosPage() {
+export default function VideosPage() {
   return (
     <MainLayout
       currentHref="/videos"

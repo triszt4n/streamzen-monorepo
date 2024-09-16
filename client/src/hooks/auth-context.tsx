@@ -23,7 +23,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   };
 
   const value = {
-    authenticated: !!data?.displayName,
+    authenticated: !!data,
     login: onLogin,
     logout: onLogout,
   };

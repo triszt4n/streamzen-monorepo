@@ -14,47 +14,24 @@ model User {
   firstName String
   email     String   @unique
   role      UserRole @default(USER)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  imageUrl  String?
   vods      Vod[]
 }
 
 model Vod {
-  id           String @id @default(cuid())
+  id           String       @id @default(cuid())
   title        String
   descMarkdown String
-  // airDate DateTime
-
-  filename String
-  ext      String
-  state    ProcessState @default(UNPROCESSED)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String
+  filename     String
+  ext          String
+  state        ProcessState @default(UNPROCESSED)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  authorId     String
+  author       User         @relation(fields: [authorId], references: [id])
 }
-
-// model Live {
-//   id String @id @default(cuid())
-//   title        String
-//   descMarkdown String
-//   airDate      DateTime
-
-//   localRtmpUrl       String?
-//   localRtmpStreamKey String?
-//   embedUrl           String?
-//   liveType           LiveType  @default(LOCAL_RTMP)
-//   state              LiveState @default(PREMIERE)
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   author   User @relation(fields: [authorId], references: [id])
-//   authorId String
-// }
 
 enum LiveState {
   PREMIERE

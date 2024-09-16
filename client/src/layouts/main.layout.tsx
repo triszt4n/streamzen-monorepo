@@ -26,7 +26,14 @@ import {
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth.hook";
 import { useMe } from "@/hooks/use-me.hook";
-import { Home, Library, PanelLeft, Search, Video } from "lucide-react";
+import {
+  Home,
+  LayoutPanelLeft,
+  Library,
+  PanelLeft,
+  Search,
+  Video,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 
@@ -39,6 +46,7 @@ export interface NavItemProps {
   icon: React.ReactNode;
   label: string;
   href: string;
+  minimalRole?: string;
 }
 
 interface MainLayoutProps {
@@ -46,6 +54,7 @@ interface MainLayoutProps {
   nav?: NavItemProps[];
   currentHref: string;
   showSearch?: boolean;
+  className?: string;
 }
 
 const navItems: NavItemProps[] = [
@@ -64,11 +73,17 @@ const navItems: NavItemProps[] = [
     label: "Products",
     href: "/collections",
   },
+  {
+    icon: <LayoutPanelLeft className="h-5 w-5" />,
+    label: "Studio",
+    href: "/studio",
+    minimalRole: "admin",
+  },
 ];
 
 const profileMenus = [
   { label: "Profile", href: "/profile" },
-  { label: "Settings", href: "/settings" },
+  { label: "Studio", href: "/studio" },
 ];
 
 export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
@@ -77,6 +92,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
   nav = navItems,
   currentHref,
   showSearch,
+  className = "grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3",
 }) => {
   const { authenticated, login, logout } = useAuth();
   const { data: me } = useMe();
@@ -110,20 +126,6 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
             </Tooltip>
           ))}
         </nav>
-        {/* <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-4">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">Settings</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Settings</TooltipContent>
-          </Tooltip>
-        </nav> */}
       </aside>
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -189,25 +191,29 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
               </>
             )}
           </div>
+          <ModeToggle />
           {authenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="overflow-hidden rounded-full"
+                  className="overflow-hidden"
                 >
                   <img
-                    src="/placeholder-user.jpg"
+                    src={me?.imageUrl}
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder-user.jpg";
+                    }}
                     width={36}
                     height={36}
                     alt="Avatar"
-                    className="overflow-hidden rounded-full"
+                    className="overflow-hidden"
                   />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{me.displayName}</DropdownMenuLabel>
+                <DropdownMenuLabel>{me?.fullName}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {profileMenus.map(({ label, href }) => (
                   <DropdownMenuItem key={label}>
@@ -245,11 +251,8 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-          <ModeToggle />
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-          {children}
-        </main>
+        <main className={className}>{children}</main>
       </div>
     </div>
   );
