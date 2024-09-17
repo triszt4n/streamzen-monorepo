@@ -1146,15 +1146,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/swagger@npm:7.4.0":
-  version: 7.4.0
-  resolution: "@nestjs/swagger@npm:7.4.0"
+"@nestjs/swagger@npm:7.4.2":
+  version: 7.4.2
+  resolution: "@nestjs/swagger@npm:7.4.2"
   dependencies:
     "@microsoft/tsdoc": "npm:^0.15.0"
     "@nestjs/mapped-types": "npm:2.0.5"
     js-yaml: "npm:4.1.0"
     lodash: "npm:4.17.21"
-    path-to-regexp: "npm:3.2.0"
+    path-to-regexp: "npm:3.3.0"
     swagger-ui-dist: "npm:5.17.14"
   peerDependencies:
     "@fastify/static": ^6.0.0 || ^7.0.0
@@ -1170,7 +1170,7 @@ __metadata:
       optional: true
     class-validator:
       optional: true
-  checksum: 10c0/6dca99984bea2303353cd890b622b037e8cb4129c38047883936c619073e0a94ccb13ca98ab68d3ad5d0bc96564f94b9e83809a7489f36e2cae4c553c385d779
+  checksum: 10c0/fda99b154933bb23d3b818fddf0338f74389a2bea42089de419c03203f18450faaa3840f1601b1994b312879903395ed34a98772e2decb0aab20c09910c2910c
   languageName: node
   linkType: hard
 
@@ -6076,6 +6076,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"path-to-regexp@npm:3.3.0":
+  version: 3.3.0
+  resolution: "path-to-regexp@npm:3.3.0"
+  checksum: 10c0/ffa0ebe7088d38d435a8d08b0fe6e8c93ceb2a81a65d4dd1d9a538f52e09d5e3474ed5f553cb3b180d894b0caa10698a68737ab599fd1e56b4663d1a64c9f77b
+  languageName: node
+  linkType: hard
+
 "path-type@npm:^4.0.0":
   version: 4.0.0
   resolution: "path-type@npm:4.0.0"
@@ -6787,7 +6794,7 @@ __metadata:
     "@nestjs/platform-express": "npm:10.4.1"
     "@nestjs/schedule": "npm:4.1.0"
     "@nestjs/schematics": "npm:10.1.4"
-    "@nestjs/swagger": "npm:7.4.0"
+    "@nestjs/swagger": "npm:7.4.2"
     "@nestjs/testing": "npm:10.4.1"
     "@prisma/client": "npm:5.19.1"
     "@types/express": "npm:4.17.21"
