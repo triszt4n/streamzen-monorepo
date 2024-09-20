@@ -1,5 +1,3 @@
-import { PlusCircle, Table, Upload, Video } from "lucide-react"
-
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,16 +12,13 @@ import { myAxios } from "@/lib/axios"
 import { VodDto } from "@/lib/dto"
 import { translateField } from "@/lib/utils"
 import { useQuery } from "@tanstack/react-query"
+import { PlusCircle, Table, Upload, Video } from "lucide-react"
 import { useParams } from "react-router-dom"
 
 export default function EditVideoPage() {
   const { id } = useParams()
 
-  const {
-    data: vod,
-    isError,
-    isLoading,
-  } = useQuery({
+  const { data: vod } = useQuery({
     queryKey: ["vod", id],
     queryFn: async () => {
       const response = await myAxios.get<VodDto>(`/videos/${id}`)
