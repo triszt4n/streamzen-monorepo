@@ -1,0 +1,39 @@
+name: Plan on PR
+
+on:
+  pull_request:
+    paths:
+      - 'infra/**'
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  terragrunt_plan:
+    name: Plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: AWS creds & tools
+        uses: ./.github/actions/setup-aws
+
+      - name: TF tools
+        uses: ./.github/actions/setup-tf-tools
+
+      - name: Init & plan
+        uses: cds-snc/terraform-plan@v3
+        # env:
+        #  TF_CLI_ARGS_plan: "-refresh=false -lock=false"
+        with:
+          directory: infra
+          comment: true
+          comment-delete: true
+          comment-title: Plan of `${{ matrix.dir }}`
+          terragrunt: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          skip-conftest: true
+          skip-fmt: true

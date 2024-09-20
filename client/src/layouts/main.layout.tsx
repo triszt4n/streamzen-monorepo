@@ -1,14 +1,7 @@
-import schLogo from "@/assets/sch-logo.svg";
-import { ModeToggle } from "@/components/mode-toggle";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
+import schLogo from "@/assets/sch-logo.svg"
+import { ModeToggle } from "@/components/mode-toggle"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,45 +9,35 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useAuth } from "@/hooks/use-auth.hook";
-import { useMe } from "@/hooks/use-me.hook";
-import {
-  Home,
-  LayoutPanelLeft,
-  Library,
-  PanelLeft,
-  Search,
-  Video,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-import { Fragment } from "react/jsx-runtime";
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Toaster } from "@/components/ui/sonner"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { useAuth } from "@/hooks/use-auth.hook"
+import { useMe } from "@/hooks/use-me.hook"
+import { Home, LayoutPanelLeft, Library, PanelLeft, Search, Video } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Fragment } from "react/jsx-runtime"
 
 export interface BreadcrumbProps {
-  label: string;
-  href: string;
+  label: string
+  href: string
 }
 
 export interface NavItemProps {
-  icon: React.ReactNode;
-  label: string;
-  href: string;
-  minimalRole?: string;
+  icon: React.ReactNode
+  label: string
+  href: string
+  minimalRole?: string
 }
 
 interface MainLayoutProps {
-  breadcrumbs?: BreadcrumbProps[];
-  nav?: NavItemProps[];
-  currentHref: string;
-  showSearch?: boolean;
-  className?: string;
+  breadcrumbs?: BreadcrumbProps[]
+  nav?: NavItemProps[]
+  currentHref: string
+  showSearch?: boolean
+  className?: string
 }
 
 const navItems: NavItemProps[] = [
@@ -79,12 +62,12 @@ const navItems: NavItemProps[] = [
     href: "/studio",
     minimalRole: "admin",
   },
-];
+]
 
 const profileMenus = [
   { label: "Profile", href: "/profile" },
   { label: "Studio", href: "/studio" },
-];
+]
 
 export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
   children,
@@ -94,8 +77,8 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
   showSearch,
   className = "grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3",
 }) => {
-  const { authenticated, login, logout } = useAuth();
-  const { data: me } = useMe();
+  const { authenticated, login, logout } = useAuth()
+  const { data: me } = useMe()
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -105,7 +88,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
             to="/"
             className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
           >
-            <span className="text-xs">:zen</span>
+            <span className="text-xs font-extrabold">:zen</span>
           </Link>
           {nav.map(({ icon, label, href }) => (
             <Tooltip key={href}>
@@ -113,9 +96,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
                 <Link
                   to={href}
                   className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    currentHref === href
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground"
+                    currentHref === href ? "bg-accent text-accent-foreground" : "text-muted-foreground"
                   } transition-colors hover:text-foreground md:h-8 md:w-8`}
                 >
                   {icon}
@@ -142,17 +123,13 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
                   to="/"
                   className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
                 >
-                  <span className="text-xs">:zen</span>
+                  <span className="text-xs font-extrabold">:zen</span>
                 </Link>
                 {nav.map(({ icon, label, href }) => (
                   <Link
                     key={href}
                     to={href}
-                    className={`flex items-center gap-4 px-2.5 ${
-                      currentHref === href
-                        ? "text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
+                    className={`flex items-center gap-4 px-2.5 ${currentHref === href ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                   >
                     {icon}
                     {label}
@@ -183,11 +160,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
             {showSearch && (
               <>
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-                />
+                <Input type="search" placeholder="Search..." className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]" />
               </>
             )}
           </div>
@@ -195,15 +168,11 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
           {authenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="overflow-hidden"
-                >
+                <Button variant="outline" size="icon" className="overflow-hidden">
                   <img
                     src={me?.imageUrl}
                     onError={(e) => {
-                      e.currentTarget.src = "/placeholder-user.jpg";
+                      e.currentTarget.src = "/placeholder-user.jpg"
                     }}
                     width={36}
                     height={36}
@@ -213,7 +182,12 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{me?.fullName}</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  <div>
+                    <div className="">{me?.fullName}</div>
+                    <div className="text-xs text-muted-foreground">{me?.email}</div>
+                  </div>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {profileMenus.map(({ label, href }) => (
                   <DropdownMenuItem key={label}>
@@ -223,7 +197,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => {
-                    logout();
+                    logout()
                   }}
                 >
                   Logout
@@ -240,7 +214,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   onClick={() => {
-                    login();
+                    login()
                   }}
                 >
                   <div className="flex justify-between items-center">
@@ -253,7 +227,8 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
           )}
         </header>
         <main className={className}>{children}</main>
+        <Toaster />
       </div>
     </div>
-  );
-};
+  )
+}

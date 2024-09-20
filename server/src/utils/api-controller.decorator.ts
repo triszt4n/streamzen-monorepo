@@ -1,6 +1,6 @@
-import { applyDecorators, Controller } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { applyDecorators, Controller } from "@nestjs/common"
+import { ApiTags } from "@nestjs/swagger"
 
-export function ApiController(path = '') {
-  return applyDecorators(Controller(path), ApiTags(path));
+export function ApiController(path = "") {
+  return applyDecorators(Controller(path), ApiTags(path))
 }

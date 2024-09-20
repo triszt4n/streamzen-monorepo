@@ -1,12 +1,13 @@
-import { CacheModule } from '@nestjs/cache-manager';
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { EventEmitterModule } from '@nestjs/event-emitter';
-import { AppController } from './app.controller';
-import { AuthModule } from './auth/auth.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { UsersModule } from './users/users.module';
-import * as Joi from 'joi';
+import { CacheModule } from "@nestjs/cache-manager"
+import { Module } from "@nestjs/common"
+import { ConfigModule } from "@nestjs/config"
+import { EventEmitterModule } from "@nestjs/event-emitter"
+import { AppController } from "./app.controller"
+import { AuthModule } from "./auth/auth.module"
+import { PrismaModule } from "./prisma/prisma.module"
+import { UsersModule } from "./users/users.module"
+import { VideoModule } from "./video/video.module"
+import * as Joi from "joi"
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import * as Joi from 'joi';
     }),
     AuthModule,
     UsersModule,
+    VideoModule,
   ],
   controllers: [AppController],
   providers: [],

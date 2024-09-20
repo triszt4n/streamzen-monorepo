@@ -7,7 +7,8 @@ variable "domain_name" {
 }
 
 variable "web_acl_arn" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "alb_domain_name" {

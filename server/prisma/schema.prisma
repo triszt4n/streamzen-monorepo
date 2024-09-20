@@ -27,11 +27,14 @@ model Vod {
   filename     String
   ext          String
   state        ProcessState @default(UNPROCESSED)
+  availability PublishState @default(DRAFT)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   authorId     String
   author       User         @relation(fields: [authorId], references: [id])
 }
+
+// todo: ViewCounter model for Vod
 
 enum LiveState {
   PREMIERE
@@ -50,6 +53,12 @@ enum ProcessState {
   PROCESSING
   PROCESSED
   FAILED
+}
+
+enum PublishState {
+  DRAFT
+  PUBLISHED
+  UNLISTED
 }
 
 enum UserRole {
