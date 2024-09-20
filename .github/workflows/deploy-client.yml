@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./client
+        working-directory: client
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,10 +36,10 @@ jobs:
         run: yarn build
 
       - name: Save bundle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bundle
-          path: ./dist
+          path: ./dist/
 
   deploy:
     name: Deploy to S3
@@ -48,10 +48,10 @@ jobs:
     environment: production
     steps:
       - name: Download bundle
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bundle
-          path: /tmp/bundle/dist
+          path: /tmp/bundle/dist/
 
       - name: Setup AWS
         uses: ./.github/actions/setup-aws
