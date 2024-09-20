@@ -1,44 +1,38 @@
-import {
-  Delete,
-  Get,
-  NotFoundException,
-  Post,
-  UseGuards
-} from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { ApiController } from 'src/utils/api-controller.decorator';
-import { UsersService } from './users.service';
+import { Delete, Get, NotFoundException, Post, UseGuards } from "@nestjs/common"
+import { JwtGuard } from "src/auth/guards/jwt.guard"
+import { ApiController } from "src/utils/api-controller.decorator"
+import { UsersService } from "./users.service"
 
-@ApiController('users')
+@ApiController("users")
 @UseGuards(JwtGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
   async findAll() {
-    return this.usersService.findAll();
+    return this.usersService.findAll()
   }
 
-  @Get(':id')
+  @Get(":id")
   async findOne(id: string) {
-    return this.usersService.findOne(id);
+    return this.usersService.findOne(id)
   }
 
-  @Post(':id/promote')
+  @Post(":id/promote")
   async promote(id: string) {
     try {
-      return this.usersService.promoteUser(id, 'ADMIN');
+      return this.usersService.promoteUser(id, "ADMIN")
     } catch {
-      throw new NotFoundException('A felhasználó nem található!');
+      throw new NotFoundException("A felhasználó nem található!")
     }
   }
 
-  @Delete(':id')
+  @Delete(":id")
   async remove(id: string) {
     try {
-      return this.usersService.remove(id);
+      return this.usersService.remove(id)
     } catch {
-      throw new NotFoundException('A felhasználó nem található!');
+      throw new NotFoundException("A felhasználó nem található!")
     }
   }
 }

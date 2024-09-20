@@ -1,16 +1,16 @@
-import { TooltipProvider } from "@/components/ui/tooltip.tsx";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import "./assets/fonts/Inter_18pt-Regular.ttf";
-import { ThemeProvider } from "./components/theme-provider.tsx";
-import { AuthProvider } from "./hooks/auth-context.tsx";
-import "./index.css";
-import CollectionsPage from "./pages/collections.tsx";
-import IndexPage from "./pages/index.tsx";
-import StudioPage from "./pages/studio.tsx";
-import VideosPage from "./pages/videos.tsx";
+import { TooltipProvider } from "@/components/ui/tooltip.tsx"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import { RouterProvider, createBrowserRouter } from "react-router-dom"
+import { ThemeProvider } from "./components/theme-provider.tsx"
+import { AuthProvider } from "./hooks/auth-context.tsx"
+import "./index.css"
+import CollectionsPage from "./pages/collections.page.tsx"
+import IndexPage from "./pages/index.page.tsx"
+import EditVideoPage from "./pages/studio/edit.page.tsx"
+import StudioPage from "./pages/studio/studio.page.tsx"
+import VideosPage from "./pages/videos.page.tsx"
 
 const router = createBrowserRouter([
   {
@@ -29,9 +29,13 @@ const router = createBrowserRouter([
     path: "/studio",
     element: <StudioPage />,
   },
-]);
+  {
+    path: "/studio/edit/:id",
+    element: <EditVideoPage />,
+  },
+])
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -45,4 +49,4 @@ createRoot(document.getElementById("root")!).render(
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>
-);
+)

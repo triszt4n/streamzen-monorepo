@@ -1,0 +1,78 @@
+name: Lint Server on PR
+
+on:
+  pull_request:
+    paths:
+      - "server/**"
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-check:
+    name: ESLint Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: corepack enable && yarn install
+
+      - name: Run ESLint check
+        run: yarn lint
+
+  format-check:
+    name: Prettier Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: corepack enable && yarn install
+
+      - name: Run Prettier check
+        run: yarn format:check
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    needs:
+      - lint-check
+      - format-check
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: corepack enable && yarn install
+
+      - name: Build
+        run: yarn build

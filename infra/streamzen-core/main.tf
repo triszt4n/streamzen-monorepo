@@ -1,9 +1,9 @@
 module "frontend" {
   source = "./modules/cloudfront-s3-origin"
 
-  environment     = var.environment
-  domain_name     = var.domain_name
-  web_acl_arn     = aws_wafv2_web_acl.global.arn
+  environment = var.environment
+  domain_name = var.domain_name
+  # web_acl_arn     = aws_wafv2_web_acl.global.arn
   alb_domain_name = var.api_domain_name
   alb_api_key     = data.aws_ssm_parameter.api_key.value
   acm_cert_arn    = aws_acm_certificate.streamzen.arn
