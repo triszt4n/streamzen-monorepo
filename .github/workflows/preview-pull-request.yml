@@ -32,7 +32,7 @@ jobs:
           directory: infra
           comment: true
           comment-delete: true
-          comment-title: Plan of `${{ matrix.dir }}`
+          comment-title: Plan of `streamzen-core`
           terragrunt: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           skip-conftest: true
