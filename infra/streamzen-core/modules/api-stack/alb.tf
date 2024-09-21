@@ -12,7 +12,7 @@ resource "aws_alb_target_group" "this" {
   name        = "streamzen-api-alb-tg-${var.environment}"
   port        = var.alb_tg_port_mapping
   protocol    = "HTTP"
-  vpc_id      = var.alb_vpc_id
+  vpc_id      = var.vpc_id
   target_type = "ip"
 
   health_check {

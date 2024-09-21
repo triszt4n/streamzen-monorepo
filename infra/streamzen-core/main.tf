@@ -26,8 +26,8 @@ module "vpc" {
   source = "./modules/protected-vpc"
 
   environment = var.environment
-  name = "streamzen-api-vpc"
-  cidr = "10.10.10.0/24"
+  name        = "streamzen-api-vpc"
+  cidr        = "10.10.10.0/24"
   subnets = {
     "streamzen-alb-1a" = {
       cidr   = "10.10.10.16/28"
@@ -65,9 +65,9 @@ module "vpc" {
     ]
     "streamzen-private-sg" = [
       {
-        type      = "ingress"
-        cidr      = "10.10.10.0/24"
-        protocol  = "-1"
+        type     = "ingress"
+        cidr     = "10.10.10.0/24"
+        protocol = "-1"
       },
       {
         type     = "egress"
@@ -77,3 +77,43 @@ module "vpc" {
     ]
   }
 }
+
+# module "api" {
+#   source = "./modules/api-stack"
+
+#   environment         = var.environment
+#   domain_zone_id      = module.stream-trisz-hu.zone_id
+#   alb_secgroup_ids    = [module.vpc.secgroups["streamzen-alb-sg"]]
+#   alb_vpc_id          = module.vpc.vpc_id
+#   alb_subnet_ids      = [module.vpc.subnets["streamzen-alb-1a"], module.vpc.subnets["streamzen-alb-1b"]]
+#   alb_cert_arn        = aws_acm_certificate.streamzen.arn
+#   alb_tg_port_mapping = 80
+#   ecs = {
+#     health_check = {
+#       command = [
+#         "CMD-SHELL",
+#         "curl -f http://localhost:${var.port_mapping}/_health || exit 1"
+#       ]
+#       retries     = 3
+#       startPeriod = 300
+#       interval    = 5
+#       timeout     = 5
+#     }
+#     family_name  = "streamzen-api"
+#     port_mapping = "80"
+#     task_environment = {
+#       "ENVIRONMENT" = var.environment
+#     }
+#     memory             = 512
+#     cpu                = 256
+#     image              = "nginx:latest"
+#     desired_task_count = 1
+#   }
+#   api_secgroup_ids = [module.vpc.secgroups["streamzen-private-sg"]]
+#   api_subnet_ids   = [module.vpc.subnets["streamzen-private-1a"], module.vpc.subnets["streamzen-private-1b"]]
+#   db = {
+#     engine         = "postgres"
+#     engine_version = "16.4"
+#     instance_class = "db.t3.micro"
+#   }
+# }

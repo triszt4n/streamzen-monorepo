@@ -10,7 +10,7 @@ variable "alb_secgroup_ids" {
   type = list(string)
 }
 
-variable "alb_vpc_id" {
+variable "vpc_id" {
   type = string
 }
 
@@ -28,13 +28,13 @@ variable "alb_tg_port_mapping" {
 
 variable "ecs" {
   type = object({
-    health_check = string
-    family_name  = string
-    port_mappings = string
-    task_environment = map(string)
-    memory = number
-    cpu = number
-    image = string
+    health_check       = string
+    family_name        = string
+    port_mapping       = string
+    task_environment   = map(string)
+    memory             = number
+    cpu                = number
+    image              = string
     desired_task_count = number
   })
 }
@@ -43,10 +43,16 @@ variable "api_secgroup_ids" {
   type = list(string)
 }
 
-variable "alb_vpc_id" {
-  type = string
-}
-
 variable "api_subnet_ids" {
   type = list(string)
+}
+
+variable "db" {
+  type = object({
+    engine            = optional(string, "postgres")
+    engine_version    = optional(string, "16.4")
+    instance_class    = optional(string, "db.t3.micro")
+    allocated_storage = optional(number, 20)
+    port              = optional(number, 5432)
+  })
 }

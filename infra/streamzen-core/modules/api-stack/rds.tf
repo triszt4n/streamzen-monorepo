@@ -1,11 +1,26 @@
-resource "aws_db_instance" "default" {
-  allocated_storage    = 10
-  db_name              = "mydb"
-  engine               = "mysql"
-  engine_version       = "8.0"
-  instance_class       = "db.t3.micro"
-  username             = "foo"
-  password             = "foobarbaz"
+data "aws_ssm_parameter" "db_username" {
+  name            = "/streamzen-dev/db-username"
+  with_decryption = true
+}
+
+data "aws_ssm_parameter" "db_password" {
+  name            = "/streamzen-dev/db-password"
+  with_decryption = true
+}
+
+resource "aws_db_instance" "this" {
+  identifier = "streamzen-rds-${var.environment}"
+
+  allocated_storage = var.db.allocated_storage
+  engine            = var.db.engine
+  engine_version    = var.db.engine_version
+  instance_class    = var.db.instance_class
+
+  db_name  = "streamzen"
+  username = data.aws_ssm_parameter.db_username.value
+  password = data.aws_ssm_parameter.db_password.value
+  port     = var.db.port
+
   parameter_group_name = "default.mysql8.0"
   skip_final_snapshot  = true
 }

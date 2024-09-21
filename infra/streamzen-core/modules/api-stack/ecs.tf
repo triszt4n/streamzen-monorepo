@@ -1,3 +1,13 @@
+locals {
+  port_mappings = [
+    {
+      containerPort = var.ecs.port_mapping
+      hostPort      = var.ecs.port_mapping
+      protocol      = "tcp"
+    }
+  ]
+}
+
 data "aws_region" "current" {}
 
 resource "aws_ecs_cluster" "this" {
@@ -12,7 +22,7 @@ resource "aws_ecs_task_definition" "this" {
       volumesFrom  = []
       mountPoints  = []
       healthCheck  = var.ecs.health_check
-      portMappings = var.ecs.port_mappings,
+      portMappings = local.port_mappings
       environment = [for k, v in var.ecs.task_environment : {
         name  = k
         value = v
@@ -21,13 +31,13 @@ resource "aws_ecs_task_definition" "this" {
       cpu       = var.ecs.cpu,
       image     = var.ecs.image,
       essential = true,
-      name      = var.microservice_name,
+      name      = "streamzen-api-${var.environment}",
       logConfiguration = {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.this.name
           awslogs-region        = data.aws_region.current.name
-          awslogs-stream-prefix = "ecs-${var.microservice_name}"
+          awslogs-stream-prefix = "ecs-streamzen-api-${var.environment}"
         }
       }
     }
@@ -37,8 +47,8 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = ["FARGATE"]
   memory                   = var.ecs.memory
   cpu                      = var.ecs.cpu
-  execution_role_arn       = var.ecstd_task_execution_role_arn
-  task_role_arn            = var.ecstd_task_role_arn
+  execution_role_arn       = aws_iam_role.ecs_service_install.arn
+  task_role_arn            = aws_iam_role.ecs_service.arn
 }
 
 resource "aws_ecs_service" "this" {
@@ -57,7 +67,7 @@ resource "aws_ecs_service" "this" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.this.arn
-    container_name   = var.load_balancer_container_name
-    container_port   = var.load_balancer_port
+    container_name   = "streamzen-api-${var.environment}"
+    container_port   = var.ecs.port_mapping
   }
 }

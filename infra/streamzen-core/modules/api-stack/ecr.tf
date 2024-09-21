@@ -7,19 +7,19 @@ resource "aws_ecr_repository" "this" {
   }
 }
 
-resource "aws_ecr_repository_policy" "scraper-app_repository_policy" {
-  repository = aws_ecr_repository.service_repository.name
+resource "aws_ecr_repository_policy" "this" {
+  repository = aws_ecr_repository.this.name
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Sid    = "admin-${aws_ecr_repository.service_repository.name}",
+        Sid    = "admin-${aws_ecr_repository.this.name}",
         Effect = "Allow",
         Principal = {
           Service = "codebuild.amazonaws.com",
           AWS = [
-            var.ecstd_task_role_arn,
-            var.ecstd_task_execution_role_arn,
+            aws_iam_role.ecs_service.arn,
+            aws_iam_role.ecs_service_install.arn
           ]
         },
         Action = [
@@ -43,8 +43,8 @@ resource "aws_ecr_repository_policy" "scraper-app_repository_policy" {
   })
 }
 
-resource "aws_ecr_lifecycle_policy" "main" {
-  repository = aws_ecr_repository.service_repository.name
+resource "aws_ecr_lifecycle_policy" "this" {
+  repository = aws_ecr_repository.this.name
 
   policy = jsonencode({
     rules = [{
