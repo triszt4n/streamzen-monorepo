@@ -21,3 +21,59 @@ module "stream-trisz-hu" {
   alias_records = {
   }
 }
+
+module "vpc" {
+  source = "./modules/protected-vpc"
+
+  environment = var.environment
+  name = "streamzen-api-vpc"
+  cidr = "10.10.10.0/24"
+  subnets = {
+    "streamzen-alb-1a" = {
+      cidr   = "10.10.10.16/28"
+      az     = "eu-central-1a"
+      public = true
+    }
+    "streamzen-alb-1b" = {
+      cidr   = "10.10.10.32/28"
+      az     = "eu-central-1b"
+      public = true
+    }
+    "streamzen-private-1a" = {
+      cidr = "10.10.10.48/28"
+      az   = "eu-central-1a"
+    }
+    "streamzen-private-1b" = {
+      cidr = "10.10.10.64/28"
+      az   = "eu-central-1b"
+    }
+  }
+  secgroups = {
+    "streamzen-alb-sg" = [
+      {
+        type      = "ingress"
+        cidr      = "0.0.0.0/0"
+        from_port = 443
+        to_port   = 443
+        protocol  = "tcp"
+      },
+      {
+        type     = "egress"
+        cidr     = "0.0.0.0/0"
+        protocol = "-1"
+      }
+    ]
+    "streamzen-private-sg" = [
+      {
+        type      = "ingress"
+        cidr      = "10.10.10.0/24"
+        protocol  = "-1"
+      },
+      {
+        type     = "egress"
+        cidr     = "0.0.0.0/0"
+        protocol = "-1"
+      }
+    ]
+  }
+}
