@@ -11,11 +11,11 @@ variable "vpc_id" {
 }
 
 variable "rules" {
-  type = object({
+  type = list(object({
     type      = string
     cidr      = string
     from_port = optional(number)
     to_port   = optional(number)
     protocol  = string
-  })
+  }))
 }

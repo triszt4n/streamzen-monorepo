@@ -7,10 +7,10 @@ output "vpc_id" {
 }
 
 output "subnets" {
-  value = { for s in aws_subnet.these : s.tags.Name => {
-    id : s.id,
-    arn : s.arn,
-    route_table_id : aws_route_table.these[s.tags.Name].id
+  value = { for k, v in aws_subnet.these : k => {
+    id : v.id,
+    arn : v.arn,
+    route_table_id : aws_route_table.these[k].id
   } }
 }
 

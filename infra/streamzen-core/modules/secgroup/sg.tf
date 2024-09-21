@@ -8,7 +8,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "these" {
-  for_each = { for rule in var.rules : k => v if v.type == "ingress" }
+  for_each = { for idx, rule in var.rules : idx => rule if rule.type == "ingress" }
 
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = each.value.cidr
@@ -18,7 +18,7 @@ resource "aws_vpc_security_group_ingress_rule" "these" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "these" {
-  for_each = { for rule in var.rules : k => v if v.type == "egress" }
+  for_each = { for idx, rule in var.rules : idx => rule if rule.type == "egress" }
 
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = each.value.cidr

@@ -1,6 +1,6 @@
 module "secgroups" {
   for_each = var.secgroups
-  source   = "./modules/secgroup"
+  source   = "../secgroup"
 
   environment = var.environment
   name        = each.key

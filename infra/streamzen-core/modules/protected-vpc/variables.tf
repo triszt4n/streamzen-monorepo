@@ -25,6 +25,7 @@ variable "secgroups" {
   description = "Security groups to create in the VPC"
   type = map(list(object({
     type      = string
+    cidr      = string
     from_port = optional(number)
     to_port   = optional(number)
     protocol  = string
