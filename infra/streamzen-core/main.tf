@@ -6,7 +6,7 @@ module "frontend" {
   # web_acl_arn     = aws_wafv2_web_acl.global.arn
   alb_domain_name = var.api_domain_name
   alb_api_key     = data.aws_ssm_parameter.api_key.value
-  acm_cert_arn    = aws_acm_certificate.streamzen.arn
+  acm_cert_arn    = module.stream-trisz-hu-cert.arn
 }
 
 module "stream-trisz-hu" {
@@ -20,6 +20,23 @@ module "stream-trisz-hu" {
   }
   alias_records = {
   }
+}
+
+module "stream-trisz-hu-cert" {
+  source = "./modules/acm"
+
+  domain_name = var.domain_name
+  zone_id = module.stream-trisz-hu.zone_id
+  providers = {
+    aws = aws.global
+  }
+}
+
+module "api-stream-trisz-hu-cert" {
+  source = "./modules/acm"
+
+  domain_name = var.api_domain_name
+  zone_id = module.stream-trisz-hu.zone_id
 }
 
 module "vpc" {

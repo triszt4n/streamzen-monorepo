@@ -1,7 +1,7 @@
 resource "aws_acm_certificate" "streamzen" {
   domain_name               = var.domain_name
   validation_method         = "DNS"
-  subject_alternative_names = ["*.${var.domain_name}"]
+  subject_alternative_names = var.use_wildcard ? ["*.${var.domain_name}"] : []
 
   lifecycle {
     create_before_destroy = true
@@ -22,7 +22,7 @@ resource "aws_route53_record" "streamzen" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = module.stream-trisz-hu.zone_id
+  zone_id         = var.zone_id
 }
 
 resource "aws_acm_certificate_validation" "streamzen" {
