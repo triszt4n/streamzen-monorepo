@@ -14,7 +14,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../u
 
 const newVodSchema = z.object({
   title: z.string().min(3, {
-    message: "Title must be at least 3 characters.",
+    message: "A cím legalább 3 karakter hosszú",
   }),
 })
 
@@ -57,12 +57,12 @@ export const AddVideoSheet: React.FC<AddVideoSheetProps> = ({ refetchFunction })
         <SheetTrigger asChild>
           <Button size="sm" className="h-7 gap-1" onClick={() => setIsOpen(true)}>
             <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">New VoD Project</span>
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Új VoD projekt</span>
           </Button>
         </SheetTrigger>{" "}
         <SheetContent side="right">
           <SheetHeader>
-            <SheetTitle>New VoD Project</SheetTitle>
+            <SheetTitle>Új VoD projekt</SheetTitle>
           </SheetHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="py-6">
@@ -71,17 +71,17 @@ export const AddVideoSheet: React.FC<AddVideoSheetProps> = ({ refetchFunction })
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>Projekt címe</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription>Can be changed later</FormDescription>
+                    <FormDescription>Később is megváltoztatható</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <div className="flex justify-end">
-                <Button type="submit">{mutation.isPending ? <LoadingSpinner /> : "Submit"}</Button>
+                <Button type="submit">{mutation.isPending ? <LoadingSpinner /> : "Küldés"}</Button>
               </div>
             </form>
           </Form>

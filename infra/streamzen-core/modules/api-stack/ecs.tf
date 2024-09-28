@@ -19,8 +19,25 @@ resource "aws_ecs_task_definition" "this" {
 
   container_definitions = jsonencode([
     {
-      volumesFrom  = []
-      mountPoints  = []
+      # volumes  = [
+      #   {
+      #     name = "streamzen-s3-volume",
+      #     host = {
+      #       sourcePath = "/mtn/streamzen-s3-volume"
+      #     }
+      #     dockerVolumeConfiguration = {
+      #       driver        = "s3fs"
+      #       options    = {
+      #         s3Url = "https://s3.amazonaws.com/${aws_s3_bucket.assets.bucket}"
+      #   }
+      # ]
+      # mountPoints  = [
+      #   {
+      #     sourceVolume  = "streamzen-s3-volume"
+      #     containerPath = "/data"
+      #     readOnly      = false
+      #   }
+      # ]
       healthCheck  = var.ecs.health_check
       portMappings = local.port_mappings
       environment = [for k, v in var.ecs.task_environment : {

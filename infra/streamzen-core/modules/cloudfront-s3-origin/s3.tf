@@ -8,15 +8,15 @@ resource "aws_s3_bucket" "assets" {
 
 resource "aws_s3_bucket_policy" "access_from_cloudfront_to_frontend" {
   bucket = aws_s3_bucket.frontend.id
-  policy = data.aws_iam_policy_document.allow_access_from_cloudfront.json
+  policy = data.aws_iam_policy_document.frontend.json
 }
 
 resource "aws_s3_bucket_policy" "access_from_cloudfront_to_assets" {
   bucket = aws_s3_bucket.assets.id
-  policy = data.aws_iam_policy_document.allow_access_from_cloudfront.json
+  policy = data.aws_iam_policy_document.assets.json
 }
 
-data "aws_iam_policy_document" "allow_access_from_cloudfront" {
+data "aws_iam_policy_document" "frontend" {
   statement {
     sid    = "AllowCloudFrontServicePrincipal"
     effect = "Allow"
@@ -30,6 +30,28 @@ data "aws_iam_policy_document" "allow_access_from_cloudfront" {
     ]
     resources = [
       "${aws_s3_bucket.frontend.arn}/*",
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [aws_cloudfront_distribution.frontend.arn]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "assets" {
+  statement {
+    sid    = "AllowCloudFrontServicePrincipal"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+    actions = [
+      "s3:GetObject",
+    ]
+    resources = [
       "${aws_s3_bucket.assets.arn}/*",
     ]
     condition {

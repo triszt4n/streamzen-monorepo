@@ -1,11 +1,11 @@
 module "frontend" {
   source = "./modules/cloudfront-s3-origin"
 
-  environment = var.environment
-  domain_name = var.domain_name
-  # web_acl_arn     = aws_wafv2_web_acl.global.arn
+  environment     = var.environment
+  domain_name     = var.domain_name
+  web_acl_arn     = aws_wafv2_web_acl.global.arn
   alb_domain_name = var.api_domain_name
-  alb_api_key     = data.aws_ssm_parameter.api_key.value
+  alb_api_key     = data.aws_ssm_parameter.these["alb-api-key"].value
   acm_cert_arn    = module.stream-trisz-hu-cert.arn
 }
 
@@ -26,7 +26,7 @@ module "stream-trisz-hu-cert" {
   source = "./modules/acm"
 
   domain_name = var.domain_name
-  zone_id = module.stream-trisz-hu.zone_id
+  zone_id     = module.stream-trisz-hu.zone_id
   providers = {
     aws = aws.global
   }
@@ -36,7 +36,7 @@ module "api-stream-trisz-hu-cert" {
   source = "./modules/acm"
 
   domain_name = var.api_domain_name
-  zone_id = module.stream-trisz-hu.zone_id
+  zone_id     = module.stream-trisz-hu.zone_id
 }
 
 module "vpc" {
@@ -95,42 +95,54 @@ module "vpc" {
   }
 }
 
-# module "api" {
-#   source = "./modules/api-stack"
+module "api" {
+  source = "./modules/api-stack"
 
-#   environment         = var.environment
-#   domain_zone_id      = module.stream-trisz-hu.zone_id
-#   alb_secgroup_ids    = [module.vpc.secgroups["streamzen-alb-sg"]]
-#   alb_vpc_id          = module.vpc.vpc_id
-#   alb_subnet_ids      = [module.vpc.subnets["streamzen-alb-1a"], module.vpc.subnets["streamzen-alb-1b"]]
-#   alb_cert_arn        = aws_acm_certificate.streamzen.arn
-#   alb_tg_port_mapping = 80
-#   ecs = {
-#     health_check = {
-#       command = [
-#         "CMD-SHELL",
-#         "curl -f http://localhost:${var.port_mapping}/_health || exit 1"
-#       ]
-#       retries     = 3
-#       startPeriod = 300
-#       interval    = 5
-#       timeout     = 5
-#     }
-#     family_name  = "streamzen-api"
-#     port_mapping = "80"
-#     task_environment = {
-#       "ENVIRONMENT" = var.environment
-#     }
-#     memory             = 512
-#     cpu                = 256
-#     image              = "nginx:latest"
-#     desired_task_count = 1
-#   }
-#   api_secgroup_ids = [module.vpc.secgroups["streamzen-private-sg"]]
-#   api_subnet_ids   = [module.vpc.subnets["streamzen-private-1a"], module.vpc.subnets["streamzen-private-1b"]]
-#   db = {
-#     engine         = "postgres"
-#     engine_version = "16.4"
-#     instance_class = "db.t3.micro"
-#   }
-# }
+  environment    = var.environment
+  domain_zone_id = module.stream-trisz-hu.zone_id
+  vpc_id         = module.vpc.vpc_id
+
+  alb_secgroup_ids    = [module.vpc.secgroups["streamzen-alb-sg"]]
+  alb_subnet_ids      = [module.vpc.subnets["streamzen-alb-1a"], module.vpc.subnets["streamzen-alb-1b"]]
+  alb_cert_arn        = aws_acm_certificate.streamzen.arn
+  alb_tg_port_mapping = 80
+
+  api_secgroup_ids = [module.vpc.secgroups["streamzen-private-sg"]]
+  api_subnet_ids   = [module.vpc.subnets["streamzen-private-1a"], module.vpc.subnets["streamzen-private-1b"]]
+
+  ecs = {
+    health_check = {
+      command = [
+        "CMD-SHELL",
+        "curl -f http://localhost:80/api/health || exit 1"
+      ]
+      retries     = 3
+      startPeriod = 300
+      interval    = 5
+      timeout     = 5
+    }
+    family_name  = "streamzen-api"
+    port_mapping = "80"
+    task_environment = {
+      PORT                  = "80"
+      AUTHSCH_CLIENT_ID     = data.aws_ssm_parameter.these["authsch-client-id"].value
+      AUTHSCH_CLIENT_SECRET = data.aws_ssm_parameter.these["authsch-client-secret"].value
+      POSTGRES_DB           = "streamzen"
+      POSTGRES_USER         = data.aws_ssm_parameter.these["db-username"].value
+      POSTGRES_PASSWORD     = data.aws_ssm_parameter.these["db-password"].value
+      POSTGRES_PRISMA_URL   = "postgresql://${data.aws_ssm_parameter.these["db-username"].value}:${data.aws_ssm_parameter.these["db-password"].value}@localhost:5432/streamzen?schema=public"
+      FRONTEND_CALLBACK     = "https://${var.domain_name}"
+      JWT_SECRET            = data.aws_ssm_parameter.these["api-jwt-secret"].value
+    }
+    memory             = 512
+    cpu                = 256
+    image              = "nginx:latest"
+    desired_task_count = 1
+  }
+
+  db = {
+    engine         = "postgres"
+    engine_version = "16.4"
+    instance_class = "db.t3.micro"
+  }
+}

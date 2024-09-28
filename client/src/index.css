@@ -3,22 +3,13 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-feature-settings:
-    "liga" 1,
-    "calt" 1; /* fix for Chrome */
-  font-synthesis: none;
-
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
 }
 
-@supports (font-variation-settings: normal) {
-  :root {
-    font-family: InterVariable, sans-serif;
-  }
+.theme-custom {
 }
 
 @layer base {
@@ -29,10 +20,12 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --primary: 228 97% 27%;
+    --primary-foreground: 228 9.7% 96.35%;
+    --secondary: 228 48.5% 8.100000000000001%;
+    --secondary-foreground: 228 9.7% 96.35%;
+    --tertiary: 34.1 100% 50%;
+    --tertiary-foreground: 228 9.7% 96.35%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96.1%;
@@ -51,25 +44,27 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: 228 63.05% 2.16%;
+    --foreground: 228 9.7% 96.35%;
+    --card: 228 45.6% 3.5100000000000002%;
+    --card-foreground: 228 9.7% 96.35%;
+    --popover: 228 45.6% 3.5100000000000002%;
+    --popover-foreground: 228 9.7% 96.35%;
+    --primary: 228 97% 27%;
+    --primary-foreground: 228 9.7% 96.35%;
+    --secondary: 228 48.5% 8.100000000000001%;
+    --secondary-foreground: 228 9.7% 96.35%;
+    --tertiary: 34.1 100% 50%;
+    --tertiary-foreground: 228 9.7% 96.35%;
+    --muted: 228 48.5% 8.100000000000001%;
+    --muted-foreground: 228 9.7% 52.7%;
+    --accent: 228 48.5% 8.100000000000001%;
+    --accent-foreground: 228 9.7% 96.35%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --destructive-foreground: 228 9.7% 96.35%;
+    --border: 228 48.5% 8.100000000000001%;
+    --input: 228 48.5% 8.100000000000001%;
+    --ring: 228 97% 27%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -79,10 +74,34 @@
 }
 
 @layer base {
+  @font-face {
+    font-family: "Bank Gothic";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src:
+      local("Bank Gothic"),
+      url(./assets/fonts/BankGothicMediumBT.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src:
+      local("Montserrat"),
+      url(./assets/fonts/Montserrat-VariableFont_wght.ttf) format("truetype");
+  }
+
   * {
     @apply border-border;
+    font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .font-heading {
+    font-family: "Bank Gothic", Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    @apply text-primary dark:text-foreground;
   }
 }

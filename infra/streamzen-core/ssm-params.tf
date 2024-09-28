@@ -3,6 +3,9 @@ locals {
     "alb-api-key",
     "db-password",
     "db-username",
+    "api-jwt-secret",
+    "authsch-client-secret",
+    "authsch-client-id",
   ]
 }
 
@@ -17,7 +20,9 @@ resource "aws_ssm_parameter" "these" {
   }
 }
 
-data "aws_ssm_parameter" "api_key" {
-  name            = aws_ssm_parameter.these["alb-api-key"].name
+data "aws_ssm_parameter" "these" {
+  for_each = toset(local.secrets)
+
+  name            = aws_ssm_parameter.these[each.key].name
   with_decryption = true
 }

@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query"
 import { PlusCircle, Table, Upload, Video } from "lucide-react"
 import { useParams } from "react-router-dom"
 
-export default function EditVideoPage() {
+export const EditVideoPage = () => {
   const { id } = useParams()
 
   const { data: vod } = useQuery({
@@ -27,14 +27,7 @@ export default function EditVideoPage() {
   })
 
   return (
-    <MainLayout
-      currentHref={`/studio`}
-      breadcrumbs={[
-        { label: "Studio", href: `/studio` },
-        { label: "Edit VoD Project", href: `/studio/edit/${id}` },
-      ]}
-      className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8"
-    >
+    <MainLayout currentHref={`/studio`} navGroup="studio" className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
         <div className="flex items-center gap-4">
           <h1 className="flex-1 flex gap-2 items-center shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">

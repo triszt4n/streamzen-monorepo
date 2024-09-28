@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_acm_certificate" "streamzen" {
   domain_name               = var.domain_name
   validation_method         = "DNS"
