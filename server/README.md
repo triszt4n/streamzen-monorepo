@@ -25,6 +25,9 @@ yarn run start:dev
 yarn run start:prod
 ```
 
+> [!IMPORTANT]
+> When you want to run the app locally and connect to the RDS database and S3 bucket, you need to set the environment variables in the shell you are running the app from. You can use the access keys from the AWS access portal under the project's permission set (with session token).
+
 ## Test
 
 ```bash

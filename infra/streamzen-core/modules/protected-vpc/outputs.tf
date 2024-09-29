@@ -15,9 +15,9 @@ output "subnets" {
 }
 
 output "secgroups" {
-  value = { for s in module.secgroups : s.name => {
-    id : s.id,
-    arn : s.arn,
+  value = { for k, v in module.secgroups : k => {
+    id : v.id,
+    arn : v.arn,
   } }
 }
 

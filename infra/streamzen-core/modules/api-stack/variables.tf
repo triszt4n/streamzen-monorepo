@@ -2,10 +2,6 @@ variable "environment" {
   type = string
 }
 
-variable "domain_zone_id" {
-  type = string
-}
-
 variable "alb_secgroup_ids" {
   type = list(string)
 }
@@ -28,7 +24,13 @@ variable "alb_tg_port_mapping" {
 
 variable "ecs" {
   type = object({
-    health_check       = string
+    health_check = object({
+      command     = list(string)
+      retries     = number
+      startPeriod = number
+      interval    = number
+      timeout     = number
+    })
     family_name        = string
     port_mapping       = string
     task_environment   = map(string)

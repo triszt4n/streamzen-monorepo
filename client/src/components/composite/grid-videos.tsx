@@ -1,5 +1,4 @@
-import { SkipForward } from "lucide-react"
-import { Link } from "react-router-dom"
+import { VideoItem } from "./video-item"
 
 interface GridVideosProps {
   videos: {
@@ -55,24 +54,7 @@ export const GridVideos: React.FC<GridVideosProps> = ({ videos = videosConst }) 
       <div className="grid gap-6 md:gap-8 px-4 md:px-6 max-w-6xl mx-auto">
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
           {videos.map((video) => (
-            <div className="relative group overflow-hidden shadow-lg bg-background dark:bg-black/80">
-              <Link to={`/videos/${video.id}`} className="absolute inset-0 z-10">
-                <span className="sr-only">View</span>
-              </Link>
-              <img
-                src={video.thumbnail}
-                alt={video.title}
-                width={450}
-                height={300}
-                className="object-cover w-full aspect-[16/9] group-hover:opacity-50 transition-opacity"
-              />
-              <div className="p-4">
-                <h3 className="font-bold tracking-tight text-base">
-                  <SkipForward className="h-5 w-5 inline-block mb-0.5 mr-1" />
-                  {video.title}
-                </h3>
-              </div>
-            </div>
+            <VideoItem key={video.id} id={video.id} title={video.title} thumbnailUrl={video.thumbnail} />
           ))}
         </div>
       </div>

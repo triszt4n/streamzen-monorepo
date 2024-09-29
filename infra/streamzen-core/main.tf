@@ -98,17 +98,25 @@ module "vpc" {
 module "api" {
   source = "./modules/api-stack"
 
-  environment    = var.environment
-  domain_zone_id = module.stream-trisz-hu.zone_id
-  vpc_id         = module.vpc.vpc_id
+  environment = var.environment
+  vpc_id      = module.vpc.vpc_id
 
-  alb_secgroup_ids    = [module.vpc.secgroups["streamzen-alb-sg"]]
-  alb_subnet_ids      = [module.vpc.subnets["streamzen-alb-1a"], module.vpc.subnets["streamzen-alb-1b"]]
-  alb_cert_arn        = aws_acm_certificate.streamzen.arn
+  alb_cert_arn        = module.api-stream-trisz-hu-cert.arn
   alb_tg_port_mapping = 80
-
-  api_secgroup_ids = [module.vpc.secgroups["streamzen-private-sg"]]
-  api_subnet_ids   = [module.vpc.subnets["streamzen-private-1a"], module.vpc.subnets["streamzen-private-1b"]]
+  alb_secgroup_ids = [
+    module.vpc.secgroups["streamzen-alb-sg"].id,
+  ]
+  alb_subnet_ids = [
+    module.vpc.subnets["streamzen-alb-1a"].id,
+    module.vpc.subnets["streamzen-alb-1b"].id,
+  ]
+  api_secgroup_ids = [
+    module.vpc.secgroups["streamzen-private-sg"].id,
+  ]
+  api_subnet_ids = [
+    module.vpc.subnets["streamzen-private-1a"].id,
+    module.vpc.subnets["streamzen-private-1b"].id,
+  ]
 
   ecs = {
     health_check = {
@@ -124,15 +132,17 @@ module "api" {
     family_name  = "streamzen-api"
     port_mapping = "80"
     task_environment = {
-      PORT                  = "80"
-      AUTHSCH_CLIENT_ID     = data.aws_ssm_parameter.these["authsch-client-id"].value
-      AUTHSCH_CLIENT_SECRET = data.aws_ssm_parameter.these["authsch-client-secret"].value
-      POSTGRES_DB           = "streamzen"
-      POSTGRES_USER         = data.aws_ssm_parameter.these["db-username"].value
-      POSTGRES_PASSWORD     = data.aws_ssm_parameter.these["db-password"].value
-      POSTGRES_PRISMA_URL   = "postgresql://${data.aws_ssm_parameter.these["db-username"].value}:${data.aws_ssm_parameter.these["db-password"].value}@localhost:5432/streamzen?schema=public"
-      FRONTEND_CALLBACK     = "https://${var.domain_name}"
-      JWT_SECRET            = data.aws_ssm_parameter.these["api-jwt-secret"].value
+      PORT                   = "80"
+      AUTHSCH_CLIENT_ID      = data.aws_ssm_parameter.these["authsch-client-id"].value
+      AUTHSCH_CLIENT_SECRET  = data.aws_ssm_parameter.these["authsch-client-secret"].value
+      POSTGRES_DB            = "streamzen"
+      POSTGRES_USER          = data.aws_ssm_parameter.these["db-username"].value
+      POSTGRES_PASSWORD      = data.aws_ssm_parameter.these["db-password"].value
+      POSTGRES_PRISMA_URL    = "postgresql://${data.aws_ssm_parameter.these["db-username"].value}:${data.aws_ssm_parameter.these["db-password"].value}@localhost:5432/streamzen?schema=public"
+      FRONTEND_CALLBACK      = "https://${var.domain_name}"
+      JWT_SECRET             = data.aws_ssm_parameter.these["api-jwt-secret"].value
+      AWS_S3_REGION          = var.region
+      AWS_S3_UPLOADED_BUCKET = "streamzen-uploaded-videos-${var.environment}-bucket"
     }
     memory             = 512
     cpu                = 256

@@ -20,6 +20,21 @@ data "aws_iam_policy_document" "ecs_service_standard" {
   }
 }
 
+data "aws_iam_policy_document" "ecs_service_s3" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:List*",
+      "s3:Get*",
+      "s3:PutObject",
+      "s3:DeleteObject",
+    ]
+    resources = [
+      "arn:aws:s3:::streamzen-*/*"
+    ]
+  }
+}
+
 data "aws_iam_policy_document" "ecs_service_scaling" {
   statement {
     effect = "Allow"
@@ -96,10 +111,17 @@ resource "aws_iam_role" "ecs_service_install" {
 }
 
 resource "aws_iam_policy" "ecs_service_standard" {
-  name        = "ecs-standard_policy"
+  name        = "ecs-standard-policy"
   path        = "/"
   description = "Allow standard ecs actions"
   policy      = data.aws_iam_policy_document.ecs_service_standard.json
+}
+
+resource "aws_iam_policy" "ecs_service_s3" {
+  name        = "ecs-s3-policy"
+  path        = "/"
+  description = "Allow S3 upload for ecs service"
+  policy      = data.aws_iam_policy_document.ecs_service_s3.json
 }
 
 resource "aws_iam_policy" "ecs_service_scaling" {
@@ -112,6 +134,11 @@ resource "aws_iam_policy" "ecs_service_scaling" {
 resource "aws_iam_role_policy_attachment" "ecs_service_standard" {
   role       = aws_iam_role.ecs_service.name
   policy_arn = aws_iam_policy.ecs_service_standard.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_service_s3" {
+  role       = aws_iam_role.ecs_service.name
+  policy_arn = aws_iam_policy.ecs_service_s3.arn
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_service_scaling" {
