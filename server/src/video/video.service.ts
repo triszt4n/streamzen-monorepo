@@ -9,17 +9,35 @@ export class VideoService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createVideoDto: CreateVideoDto, user: UserDto) {
+    const viewCounter = await this.prisma.viewCounter.create({
+      data: {},
+    })
+
     return this.prisma.vod.create({
       data: {
         title: createVideoDto.title,
         descMarkdown: "",
-        filename: "unknown",
-        ext: "unknown",
         author: {
           connect: {
             id: user.id,
           },
         },
+        viewCounter: {
+          connect: {
+            id: viewCounter.id,
+          },
+        },
+      },
+    })
+  }
+
+  async afterUpload(id: string, ext: string) {
+    return this.prisma.vod.update({
+      where: {
+        id,
+      },
+      data: {
+        uploadedFilename: new Date().toISOString().slice(0, 19).replaceAll(":", "-") + ext,
       },
     })
   }

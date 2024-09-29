@@ -1,5 +1,8 @@
+import { AboutPage } from "@/pages/about.page"
+import { CoursesPage } from "@/pages/courses.page"
 import { EventsPage } from "@/pages/events.page"
 import { IndexPage } from "@/pages/index.page"
+import { MembersPage } from "@/pages/members.page"
 import { EditVideoPage } from "@/pages/studio/edit.page"
 import { StudioPage } from "@/pages/studio/studio.page"
 import { VideosPage } from "@/pages/videos.page"
@@ -30,19 +33,19 @@ export const routes: StreamzenRouteObject[] = [
   },
   {
     path: "/members",
-    element: <div />,
+    element: <MembersPage />,
     navGroup: "main",
     navTitle: "Tagok",
   },
   {
     path: "/courses",
-    element: <div />,
+    element: <CoursesPage />,
     navGroup: "main",
     navTitle: "Tanfolyamok",
   },
   {
     path: "/about",
-    element: <div />,
+    element: <AboutPage />,
     navGroup: "main",
     navTitle: "Rólunk",
   },

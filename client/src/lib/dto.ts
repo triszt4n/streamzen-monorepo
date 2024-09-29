@@ -9,6 +9,7 @@ export interface MeDto {
 export interface VodDto {
   id: number
   title: string
+  descMarkdown: string
   thumbnailUrl: string
   createdAt: string
   author: MeDto

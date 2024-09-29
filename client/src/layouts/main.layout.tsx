@@ -23,7 +23,9 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
         style={{ background: `url(${bgPattern}) 20px 20px repeat` }}
       >
         <BreadcrumbComposite />
-        <main className={className}>{children}</main>
+        <main>
+          <div className={className}>{children}</div>
+        </main>
         <Toaster />
       </div>
       <Footer />
