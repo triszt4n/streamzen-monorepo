@@ -73,15 +73,15 @@ export const EditVideoPage = () => {
     },
   })
 
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+  })
+
   useEffect(() => {
     if (vod) {
       form.reset(vod)
     }
-  }, [vod])
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-  })
+  }, [vod, form.reset])
 
   const editMutation = useMutation({
     mutationFn: async (dto: z.infer<typeof schema>) => {
