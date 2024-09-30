@@ -163,5 +163,5 @@ module "jumpbox" {
 
   vpc_id      = module.vpc.vpc_id
   secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
-  subnet_id   = module.vpc.subnets["streamzen-private-1a"].id
+  subnet_id   = module.vpc.subnets["streamzen-alb-1a"].id
 }

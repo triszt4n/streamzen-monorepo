@@ -1,46 +1,41 @@
-# Please keep this section in sync with the other Dockerfile
-FROM node:20-alpine AS base
+# Stage 1: Build the application
+# Use the official Node.js LTS (Long Term Support) image as the base image
+FROM node:20-alpine AS build
+ENV NODE_ENV=development
 
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Set the working directory inside the container
+WORKDIR /app
 
-ENV NODE_ENV=production
-ENV YARN_VERSION=4.4.1
+# Copy package.json and yarn.lock to the container
+COPY package.json ./
 
-WORKDIR /app/
+# Install the project dependencies using Yarn
+RUN corepack enable
+RUN yarn install
 
-RUN corepack enable &&\
-    corepack prepare yarn@${YARN_VERSION} &&\
-    echo 'nodeLinker: node-modules' > .yarnrc.yml &&\
-    mkdir backend/ frontend/
-
-FROM base AS builder
-
-COPY package.json yarn.lock ./
-
-RUN yarn install --immutable
-
-# ------------ END OF COMMON STEPS -------------- #
-
+# Copy the rest of the project files to the container
 COPY . .
+
+# Build the NestJS application
+RUN yarn prisma generate
 RUN yarn build
 
-# ======================================================== #
-# ======================== RUNNER ======================== #
-# ======================================================== #
+# Stage 2: Create a lightweight container with the built application
+FROM node:20-alpine AS production
+ENV NODE_ENV=production
 
-FROM base AS runner
-
-COPY package.json yarn.lock ./
-
-RUN yarn install --immutable
-
-COPY --from=builder /app/prisma/ ./prisma/
-
+# Set the working directory inside the container
 WORKDIR /app
-RUN npx prisma generate
-COPY --from=builder /app/dist/ ./
 
-ENV NODE_ENV=production PORT=80
-EXPOSE 80
-CMD ["node", "./main.js"]
+# Copy the built application from the previous stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/yarn.lock ./yarn.lock
+COPY --from=build /app/prisma ./prisma
+
+# Install only production dependencies
+RUN yarn install --production --frozen-lockfile
+RUN yarn prisma generate
+
+# Command to run the application
+CMD ["node", "dist/main"]
