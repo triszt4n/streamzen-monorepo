@@ -1,14 +1,28 @@
-resource "aws_ssm_parameter" "api_key" {
-  name        = "/streamzen-dev/alb-api-key"
-  description = "API Key for the ALB"
-  type        = "SecureString"
-  value       = "dummyvalue"
+locals {
+  secrets = [
+    "alb-api-key",
+    "db-password",
+    "db-username",
+    "api-jwt-secret",
+    "authsch-client-secret",
+    "authsch-client-id",
+  ]
+}
+
+resource "aws_ssm_parameter" "these" {
+  for_each = toset(local.secrets)
+
+  name  = "/streamzen-${var.environment}/${each.value}"
+  type  = "SecureString"
+  value = "dummyvalue"
   lifecycle {
     ignore_changes = [value]
   }
 }
 
-data "aws_ssm_parameter" "api_key" {
-  name            = aws_ssm_parameter.api_key.name
+data "aws_ssm_parameter" "these" {
+  for_each = toset(local.secrets)
+
+  name            = aws_ssm_parameter.these[each.key].name
   with_decryption = true
 }

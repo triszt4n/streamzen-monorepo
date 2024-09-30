@@ -5,47 +5,24 @@ import { createRoot } from "react-dom/client"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import { ThemeProvider } from "./components/theme-provider.tsx"
 import { AuthProvider } from "./hooks/auth-context.tsx"
+import { BreadcrumbProvider } from "./hooks/breadcrumb-context.tsx"
 import "./index.css"
-import CollectionsPage from "./pages/collections.page.tsx"
-import IndexPage from "./pages/index.page.tsx"
-import EditVideoPage from "./pages/studio/edit.page.tsx"
-import StudioPage from "./pages/studio/studio.page.tsx"
-import VideosPage from "./pages/videos.page.tsx"
+import { routes } from "./lib/routes.tsx"
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <IndexPage />,
-  },
-  {
-    path: "/videos",
-    element: <VideosPage />,
-  },
-  {
-    path: "/collections",
-    element: <CollectionsPage />,
-  },
-  {
-    path: "/studio",
-    element: <StudioPage />,
-  },
-  {
-    path: "/studio/edit/:id",
-    element: <EditVideoPage />,
-  },
-])
-
-const queryClient = new QueryClient()
+const router = createBrowserRouter(routes)
+export const queryClient = new QueryClient()
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <TooltipProvider>
-            <RouterProvider router={router} />
-          </TooltipProvider>
-        </ThemeProvider>
+        <BreadcrumbProvider>
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <TooltipProvider>
+              <RouterProvider router={router} />
+            </TooltipProvider>
+          </ThemeProvider>
+        </BreadcrumbProvider>
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>

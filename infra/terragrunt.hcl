@@ -27,6 +27,18 @@ provider "aws" {
     }
   }
 }
+provider "aws" {
+  alias  = "global"
+  region = "us-east-1"
+  default_tags {
+    tags = {
+      environment  = "${local.environment}"
+      account_name = "${local.account_name}"
+      account_id   = "${local.account_id}"
+      feature      = "${local.feature}"
+    }
+  }
+}
 EOF
 }
 

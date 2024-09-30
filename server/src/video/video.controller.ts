@@ -1,5 +1,6 @@
 import { CurrentUser } from "@kir-dev/passport-authsch"
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, ParseFilePipe, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common"
+import { FileInterceptor } from "@nestjs/platform-express"
 import { UserDto } from "src/auth/dto/user.dto"
 import { JwtGuard } from "src/auth/guards/jwt.guard"
 import { CreateVideoDto } from "./dto/create-video.dto"
@@ -12,8 +13,27 @@ export class VideoController {
 
   @Post()
   @UseGuards(JwtGuard)
-  create(@Body() createVideoDto: CreateVideoDto, @CurrentUser() user: UserDto) {
+  async create(@Body() createVideoDto: CreateVideoDto, @CurrentUser() user: UserDto) {
     return this.videoService.create(createVideoDto, user)
+  }
+
+  @Post(":id/upload")
+  @UseGuards(JwtGuard)
+  @UseInterceptors(FileInterceptor("file"))
+  async upload(
+    id: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          // new MaxFileSizeValidator({ maxSize: 1000 }),
+          // new FileTypeValidator({ fileType: 'image/jpeg' }),
+        ],
+      })
+    )
+    file: Express.Multer.File
+  ) {
+    const result = await this.videoService.upload(id, file.originalname, file.buffer)
+    return await this.videoService.afterUpload(id, result.fileName)
   }
 
   @Get()

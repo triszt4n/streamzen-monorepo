@@ -17,15 +17,13 @@ RUN corepack enable &&\
 FROM base AS builder
 
 COPY package.json yarn.lock ./
-COPY frontend/package.json ./frontend/
-COPY backend/package.json ./backend/
 
 RUN yarn install --immutable
 
 # ------------ END OF COMMON STEPS -------------- #
 
-COPY ./backend/ ./backend/
-RUN yarn workspace backend run build
+COPY . .
+RUN yarn build
 
 # ======================================================== #
 # ======================== RUNNER ======================== #
@@ -34,17 +32,15 @@ RUN yarn workspace backend run build
 FROM base AS runner
 
 COPY package.json yarn.lock ./
-COPY backend/package.json ./backend/
 
-RUN yarn workspaces focus backend --production
+RUN yarn install --immutable
 
-COPY --from=builder /app/backend/prisma/ ./backend/prisma/
+COPY --from=builder /app/prisma/ ./prisma/
 
-WORKDIR /app/backend
+WORKDIR /app
 RUN npx prisma generate
-COPY --from=builder /app/backend/dist/ ./
+COPY --from=builder /app/dist/ ./
 
-
-ENV NODE_ENV=production PORT=3300
-EXPOSE 3300
+ENV NODE_ENV=production PORT=80
+EXPOSE 80
 CMD ["node", "./main.js"]

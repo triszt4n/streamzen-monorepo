@@ -1,234 +1,34 @@
-import schLogo from "@/assets/sch-logo.svg"
-import { ModeToggle } from "@/components/mode-toggle"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import bgPattern from "@/assets/bg-pattern.svg"
+
+import { BreadcrumbComposite } from "@/components/breadcrumb-composite"
+import { Footer } from "@/components/footer"
+import { Navbar } from "@/components/navbar"
 import { Toaster } from "@/components/ui/sonner"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { useAuth } from "@/hooks/use-auth.hook"
-import { useMe } from "@/hooks/use-me.hook"
-import { Home, LayoutPanelLeft, Library, PanelLeft, Search, Video } from "lucide-react"
-import { Link } from "react-router-dom"
-import { Fragment } from "react/jsx-runtime"
-
-export interface BreadcrumbProps {
-  label: string
-  href: string
-}
-
-export interface NavItemProps {
-  icon: React.ReactNode
-  label: string
-  href: string
-  minimalRole?: string
-}
+import { routes } from "@/lib/routes"
 
 interface MainLayoutProps {
-  breadcrumbs?: BreadcrumbProps[]
-  nav?: NavItemProps[]
   currentHref: string
-  showSearch?: boolean
+  navGroup?: string
   className?: string
 }
 
-const navItems: NavItemProps[] = [
-  {
-    icon: <Home className="h-5 w-5" />,
-    label: "Home",
-    href: "/",
-  },
-  {
-    icon: <Video className="h-5 w-5" />,
-    label: "Videos",
-    href: "/videos",
-  },
-  {
-    icon: <Library className="h-5 w-5" />,
-    label: "Products",
-    href: "/collections",
-  },
-  {
-    icon: <LayoutPanelLeft className="h-5 w-5" />,
-    label: "Studio",
-    href: "/studio",
-    minimalRole: "admin",
-  },
-]
-
-const profileMenus = [
-  { label: "Profile", href: "/profile" },
-  { label: "Studio", href: "/studio" },
-]
-
-export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
-  children,
-  breadcrumbs,
-  nav = navItems,
-  currentHref,
-  showSearch,
-  className = "grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3",
-}) => {
-  const { authenticated, login, logout } = useAuth()
-  const { data: me } = useMe()
+export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({ children, navGroup = "main", currentHref, className = "" }) => {
+  const routesNavGroup = routes.filter((route) => route.navGroup === navGroup)
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 sm:py-4">
-          <Link
-            to="/"
-            className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-          >
-            <span className="text-xs font-extrabold">:zen</span>
-          </Link>
-          {nav.map(({ icon, label, href }) => (
-            <Tooltip key={href}>
-              <TooltipTrigger asChild>
-                <Link
-                  to={href}
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    currentHref === href ? "bg-accent text-accent-foreground" : "text-muted-foreground"
-                  } transition-colors hover:text-foreground md:h-8 md:w-8`}
-                >
-                  {icon}
-                  <span className="sr-only">{label}</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">{label}</TooltipContent>
-            </Tooltip>
-          ))}
-        </nav>
-      </aside>
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="icon" variant="outline" className="sm:hidden">
-                <PanelLeft className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="sm:max-w-xs">
-              <nav className="grid gap-6 text-lg font-medium">
-                <Link
-                  to="/"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <span className="text-xs font-extrabold">:zen</span>
-                </Link>
-                {nav.map(({ icon, label, href }) => (
-                  <Link
-                    key={href}
-                    to={href}
-                    className={`flex items-center gap-4 px-2.5 ${currentHref === href ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                  >
-                    {icon}
-                    {label}
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
-          <Breadcrumb className="hidden md:flex">
-            <BreadcrumbList>
-              {breadcrumbs?.map(({ label, href }, index) => (
-                <Fragment key={index}>
-                  <BreadcrumbItem>
-                    {index < breadcrumbs.length - 1 ? (
-                      <BreadcrumbLink asChild>
-                        <Link to={href}>{label}</Link>
-                      </BreadcrumbLink>
-                    ) : (
-                      <BreadcrumbPage>{label}</BreadcrumbPage>
-                    )}
-                  </BreadcrumbItem>
-                  {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
-                </Fragment>
-              ))}
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            {showSearch && (
-              <>
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input type="search" placeholder="Search..." className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]" />
-              </>
-            )}
-          </div>
-          <ModeToggle />
-          {authenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="overflow-hidden">
-                  <img
-                    src={me?.imageUrl}
-                    onError={(e) => {
-                      e.currentTarget.src = "/placeholder-user.jpg"
-                    }}
-                    width={36}
-                    height={36}
-                    alt="Avatar"
-                    className="overflow-hidden"
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>
-                  <div>
-                    <div className="">{me?.fullName}</div>
-                    <div className="text-xs text-muted-foreground">{me?.email}</div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {profileMenus.map(({ label, href }) => (
-                  <DropdownMenuItem key={label}>
-                    <Link to={href}>{label}</Link>
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    logout()
-                  }}
-                >
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="overflow-hidden">
-                  Log in
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => {
-                    login()
-                  }}
-                >
-                  <div className="flex justify-between items-center">
-                    <img src={schLogo} className="w-4 h-4 mr-2" alt="AuthSCH" />
-                    <div>with AuthSCH</div>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </header>
-        <main className={className}>{children}</main>
+    <div className="flex min-h-screen w-full flex-col">
+      <Navbar routesNavGroup={routesNavGroup} currentHref={currentHref} navGroup={navGroup} />
+      <div
+        className="flex min-h-[calc(100vh_-_theme(spacing.84))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8"
+        style={{ background: `url(${bgPattern}) 20px 20px repeat` }}
+      >
+        <BreadcrumbComposite />
+        <main>
+          <div className={className}>{children}</div>
+        </main>
         <Toaster />
       </div>
+      <Footer />
     </div>
   )
 }

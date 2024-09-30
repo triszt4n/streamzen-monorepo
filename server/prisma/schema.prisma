@@ -8,33 +8,63 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  authSchId String   @unique
-  fullName  String
-  firstName String
-  email     String   @unique
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  imageUrl  String?
-  vods      Vod[]
+  id              String           @id @default(cuid())
+  authSchId       String           @unique
+  fullName        String
+  firstName       String
+  email           String           @unique
+  role            UserRole         @default(USER)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  imageUrl        String?
+  vods            Vod[]
+  crewMemberships CrewMembership[]
 }
 
 model Vod {
-  id           String       @id @default(cuid())
+  id String @id @default(cuid())
+
   title        String
   descMarkdown String
-  filename     String
-  ext          String
-  state        ProcessState @default(UNPROCESSED)
-  availability PublishState @default(DRAFT)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  authorId     String
-  author       User         @relation(fields: [authorId], references: [id])
+
+  uploadedFilename String?
+  thumbnailUrl     String?
+
+  state          ProcessState @default(UNPROCESSED)
+  availability   PublishState @default(DRAFT)
+  allowDownloads Boolean      @default(true)
+  allowShare     Boolean      @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId      String
+  author        User             @relation(fields: [authorId], references: [id])
+  crewMembers   CrewMembership[]
+  viewCounterId String           @unique
+  viewCounter   ViewCounter      @relation(fields: [viewCounterId], references: [id])
 }
 
-// todo: ViewCounter model for Vod
+model CrewMembership {
+  id String @id @default(cuid())
+
+  role String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  vodId  String
+  vod    Vod    @relation(fields: [vodId], references: [id])
+}
+
+model ViewCounter {
+  id String @id @default(cuid())
+
+  count Int  @default(0)
+  vod   Vod?
+}
 
 enum LiveState {
   PREMIERE

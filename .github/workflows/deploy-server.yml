@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build image
+  deploy:
+    name: Deploy server app to ECR
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -16,10 +16,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-  deploy:
-    name: Deploy to ECR
-    runs-on: ubuntu-latest
-    needs: build
-    environment: production
-    steps:
-      - run: echo "Hello, world!"
+      - name: Setup AWS
+        uses: ./.github/actions/setup-aws
+
+      - name: Login to ECR
+        run: aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 339713096573.dkr.ecr.eu-central-1.amazonaws.com
+
+      - name: Build image
+        run: docker build -t streamzen-api-repo-dev .
+
+      - name: Tag image
+        run: docker tag streamzen-api-repo-dev:latest 339713096573.dkr.ecr.eu-central-1.amazonaws.com/streamzen-api-repo-dev:latest
+
+      - name: Push image
+        run: docker push 339713096573.dkr.ecr.eu-central-1.amazonaws.com/streamzen-api-repo-dev:latest
