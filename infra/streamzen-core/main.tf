@@ -146,7 +146,6 @@ module "api" {
     }
     memory             = 512
     cpu                = 256
-    image              = "nginx:latest"
     desired_task_count = 1
   }
 

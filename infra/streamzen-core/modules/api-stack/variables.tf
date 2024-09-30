@@ -36,7 +36,6 @@ variable "ecs" {
     task_environment   = map(string)
     memory             = number
     cpu                = number
-    image              = string
     desired_task_count = number
   })
 }
