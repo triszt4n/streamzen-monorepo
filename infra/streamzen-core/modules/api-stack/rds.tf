@@ -14,7 +14,7 @@ resource "aws_db_subnet_group" "this" {
 }
 
 resource "aws_db_instance" "this" {
-  identifier = "streamzen-rds-${var.environment}"
+  identifier = "streamzen-rds-db-${var.environment}"
 
   allocated_storage = var.db.allocated_storage
   engine            = var.db.engine

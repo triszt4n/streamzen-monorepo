@@ -156,3 +156,12 @@ module "api" {
     instance_class = "db.t3.micro"
   }
 }
+
+module "jumpbox" {
+  source = "./modules/jumpbox"
+  name   = "streamzen-jumpbox-${var.environment}"
+
+  vpc_id      = module.vpc.vpc_id
+  secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
+  subnet_id   = module.vpc.subnets["streamzen-private-1a"].id
+}
