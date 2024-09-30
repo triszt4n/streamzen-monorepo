@@ -37,7 +37,7 @@ COPY --from=build /app/prisma ./prisma
 # Install only production dependencies
 RUN corepack enable
 RUN yarn install --immutable
-RUN yarn prisma generate
+RUN npx prisma generate
 
 # Command to run the application
 CMD ["node", "dist/main"]
