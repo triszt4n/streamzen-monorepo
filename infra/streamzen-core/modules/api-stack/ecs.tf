@@ -6,12 +6,18 @@ locals {
       protocol      = "tcp"
     }
   ]
+
+  # bump this if the task definition changes
+  image_tag = "streamzen-dummy-image-tag:3"
 }
 
 data "aws_region" "current" {}
 
 resource "aws_ecs_cluster" "this" {
   name = "streamzen-api-cluster-${var.environment}"
+  tags = {
+    local_image_tag = local.image_tag
+  }
 }
 
 resource "aws_ecs_task_definition" "this" {
@@ -19,6 +25,8 @@ resource "aws_ecs_task_definition" "this" {
 
   container_definitions = jsonencode([
     {
+      volumes      = []
+      mountPoints  = []
       healthCheck  = var.ecs.health_check
       portMappings = local.port_mappings
       environment = concat(
@@ -59,6 +67,11 @@ resource "aws_ecs_task_definition" "this" {
   cpu                      = var.ecs.cpu
   execution_role_arn       = aws_iam_role.ecs_service_install.arn
   task_role_arn            = aws_iam_role.ecs_service.arn
+
+  lifecycle {
+    replace_triggered_by = [aws_ecs_cluster.this] # this makes it a clusterfuck
+    ignore_changes       = [container_definitions]
+  }
 }
 
 resource "aws_ecs_service" "this" {
