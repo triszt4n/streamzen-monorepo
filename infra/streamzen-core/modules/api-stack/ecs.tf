@@ -19,34 +19,27 @@ resource "aws_ecs_task_definition" "this" {
 
   container_definitions = jsonencode([
     {
-      # volumes  = [
-      #   {
-      #     name = "streamzen-s3-volume",
-      #     host = {
-      #       sourcePath = "/mtn/streamzen-s3-volume"
-      #     }
-      #     dockerVolumeConfiguration = {
-      #       driver        = "s3fs"
-      #       options    = {
-      #         s3Url = "https://s3.amazonaws.com/${aws_s3_bucket.assets.bucket}"
-      #   }
-      # ]
-      # mountPoints  = [
-      #   {
-      #     sourceVolume  = "streamzen-s3-volume"
-      #     containerPath = "/data"
-      #     readOnly      = false
-      #   }
-      # ]
       healthCheck  = var.ecs.health_check
       portMappings = local.port_mappings
-      environment = [for k, v in var.ecs.task_environment : {
-        name  = k
-        value = v
-      }]
+      environment = concat(
+        [for k, v in var.ecs.task_environment : {
+          name  = k
+          value = v
+        }],
+        [{
+          name = "POSTGRES_PRISMA_URL"
+          value = join("", [
+            "postgresql://",
+            "${var.ecs.task_environment["POSTGRES_USER"]}:",
+            "${var.ecs.task_environment["POSTGRES_PASSWORD"]}@",
+            "${aws_db_instance.this.endpoint}/",
+            "${var.ecs.task_environment["POSTGRES_DB"]}?schema=public",
+          ])
+        }]
+      )
       memory    = var.ecs.memory,
       cpu       = var.ecs.cpu,
-      image     = var.ecs.image,
+      image     = "${aws_ecr_repository.this.repository_url}:latest",
       essential = true,
       name      = "streamzen-api-${var.environment}",
       logConfiguration = {

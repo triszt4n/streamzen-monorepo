@@ -138,7 +138,7 @@ module "api" {
       POSTGRES_DB            = "streamzen"
       POSTGRES_USER          = data.aws_ssm_parameter.these["db-username"].value
       POSTGRES_PASSWORD      = data.aws_ssm_parameter.these["db-password"].value
-      POSTGRES_PRISMA_URL    = "postgresql://${data.aws_ssm_parameter.these["db-username"].value}:${data.aws_ssm_parameter.these["db-password"].value}@localhost:5432/streamzen?schema=public"
+      POSTGRES_PRISMA_URL    = "postgresql://${data.aws_ssm_parameter.these["db-username"].value}:${data.aws_ssm_parameter.these["db-password"].value}@streamzen-rds-dev.czw6iqm8461h.eu-central-1.rds.amazonaws.com:5432/streamzen?schema=public"
       FRONTEND_CALLBACK      = "https://${var.domain_name}"
       JWT_SECRET             = data.aws_ssm_parameter.these["api-jwt-secret"].value
       AWS_S3_REGION          = var.region
