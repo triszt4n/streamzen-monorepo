@@ -14,7 +14,9 @@ resource "aws_internet_gateway" "this" {
 
 resource "aws_vpc" "this" {
   # checkov:skip=CKV2_AWS_11: Ensure VPC flow logging is enabled in all VPCs
-  cidr_block = var.cidr
+  cidr_block           = var.cidr
+  enable_dns_support   = true
+  enable_dns_hostnames = true
   tags = {
     Name = "${var.name}-${var.environment}"
   }

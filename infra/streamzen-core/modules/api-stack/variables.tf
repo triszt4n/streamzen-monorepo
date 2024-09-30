@@ -48,6 +48,10 @@ variable "api_subnet_ids" {
   type = list(string)
 }
 
+variable "api_subnet_route_table_ids" {
+  type = list(string)
+}
+
 variable "db" {
   type = object({
     engine            = optional(string, "postgres")
