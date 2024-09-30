@@ -34,6 +34,7 @@ COPY --from=build /app/yarn.lock ./yarn.lock
 COPY --from=build /app/prisma ./prisma
 
 # Install only production dependencies
+RUN corepack enable
 RUN yarn install --production --frozen-lockfile
 RUN yarn prisma generate
 
