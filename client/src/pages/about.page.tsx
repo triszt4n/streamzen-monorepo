@@ -73,7 +73,7 @@ export const AboutPage = () => {
           első emeletén, a 106-os szobában!
         </p>
       </div>
-      <GridVideos />
+      <GridVideos videos={[]} />
     </MainLayout>
   )
 }

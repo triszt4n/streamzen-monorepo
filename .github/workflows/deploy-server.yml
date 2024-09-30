@@ -5,10 +5,15 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     name: Deploy server app to ECR
     runs-on: ubuntu-latest
+    environment: production
     defaults:
       run:
         working-directory: server
