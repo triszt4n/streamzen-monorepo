@@ -17,7 +17,7 @@ RUN yarn install
 COPY . .
 
 # Build the NestJS application
-RUN yarn prisma generate
+RUN npx prisma generate
 RUN yarn build
 
 # Stage 2: Create a lightweight container with the built application
