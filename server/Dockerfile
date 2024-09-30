@@ -31,11 +31,12 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/yarn.lock ./yarn.lock
+COPY --from=build /app/.yarnrc.yml ./.yarnrc.yml
 COPY --from=build /app/prisma ./prisma
 
 # Install only production dependencies
 RUN corepack enable
-RUN yarn install --production --frozen-lockfile
+RUN yarn install --immutable
 RUN yarn prisma generate
 
 # Command to run the application
