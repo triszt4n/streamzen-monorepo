@@ -1,6 +1,7 @@
 resource "aws_wafv2_web_acl" "global" {
-  name  = "streamzen-global-webacl-${var.environment}"
-  scope = "CLOUDFRONT"
+  provider = aws.global
+  name     = "streamzen-global-webacl-${var.environment}"
+  scope    = "CLOUDFRONT"
 
   default_action {
     allow {}

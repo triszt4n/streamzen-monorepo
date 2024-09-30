@@ -32,7 +32,7 @@ variable "ecs" {
       timeout     = number
     })
     family_name        = string
-    port_mapping       = string
+    port_mapping       = number
     task_environment   = map(string)
     memory             = number
     cpu                = number

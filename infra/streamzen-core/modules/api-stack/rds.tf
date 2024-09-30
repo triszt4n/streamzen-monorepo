@@ -21,6 +21,5 @@ resource "aws_db_instance" "this" {
   password = data.aws_ssm_parameter.db_password.value
   port     = var.db.port
 
-  parameter_group_name = "default.mysql8.0"
   skip_final_snapshot  = true
 }

@@ -130,7 +130,7 @@ module "api" {
       timeout     = 5
     }
     family_name  = "streamzen-api"
-    port_mapping = "80"
+    port_mapping = 80
     task_environment = {
       PORT                   = "80"
       AUTHSCH_CLIENT_ID      = data.aws_ssm_parameter.these["authsch-client-id"].value
