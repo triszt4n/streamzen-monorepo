@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
 import { Progress } from "@/components/ui/progress"
-import { useToast } from "@/hooks/use-toast"
 import { MainLayout } from "@/layouts/main.layout"
 import { myAxios } from "@/lib/axios"
 import { VodDto } from "@/lib/dto"
@@ -56,7 +55,6 @@ const schema = z.object({
 
 export const EditVideoPage = () => {
   const { id } = useParams()
-  const toast = useToast()
   const [files, setFiles] = useState<File[]>([])
   const [uploadError, setUploadError] = useState<string | undefined>(undefined)
 
