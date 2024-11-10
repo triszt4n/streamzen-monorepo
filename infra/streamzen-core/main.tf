@@ -110,12 +110,16 @@ module "api" {
     module.vpc.subnets["streamzen-alb-1a"].id,
     module.vpc.subnets["streamzen-alb-1b"].id,
   ]
+
   api_secgroup_ids = [
     module.vpc.secgroups["streamzen-private-sg"].id,
   ]
   api_subnet_ids = [
     module.vpc.subnets["streamzen-private-1a"].id,
     module.vpc.subnets["streamzen-private-1b"].id,
+  ]
+  api_subnet_route_table_ids = [
+    for subnet in values(module.vpc.subnets) : subnet.route_table_id
   ]
 
   ecs = {
