@@ -66,32 +66,39 @@ module "vpc" {
     }
   }
   secgroups = {
-    "streamzen-alb-sg" = [
-      {
+    "streamzen-alb-sg" = {
+      "in-443" = {
         type      = "ingress"
         cidr      = "0.0.0.0/0"
         from_port = 443
         to_port   = 443
         protocol  = "tcp"
-      },
-      {
+      }
+      "in-80" = {
+        type      = "ingress"
+        cidr      = "0.0.0.0/0"
+        from_port = 80
+        to_port   = 80
+        protocol  = "tcp"
+      }
+      "out" = {
         type     = "egress"
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
-    ]
-    "streamzen-private-sg" = [
-      {
+    }
+    "streamzen-private-sg" = {
+      "in" = {
         type     = "ingress"
         cidr     = "10.10.10.0/24"
         protocol = "-1"
-      },
-      {
+      }
+      "out" = {
         type     = "egress"
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
-    ]
+    }
   }
 }
 
@@ -126,7 +133,7 @@ module "api" {
     health_check = {
       command = [
         "CMD-SHELL",
-        "curl -f http://localhost:80/api/health || exit 1"
+        "curl -f http://localhost:80/api/health || exit 1",
       ]
       retries     = 3
       startPeriod = 300
