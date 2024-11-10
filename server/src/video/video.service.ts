@@ -1,6 +1,7 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { Injectable } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
+import { ProcessState } from "@prisma/client"
 import { UserDto } from "src/auth/dto/user.dto"
 import { PrismaService } from "src/prisma/prisma.service"
 import { CreateVideoDto } from "./dto/create-video.dto"
@@ -64,6 +65,7 @@ export class VideoService {
       },
       data: {
         uploadedFilename: fileName,
+        state: ProcessState.UPLOADED,
       },
     })
   }

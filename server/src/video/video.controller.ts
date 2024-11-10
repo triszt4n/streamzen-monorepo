@@ -21,7 +21,7 @@ export class VideoController {
   @UseGuards(JwtGuard)
   @UseInterceptors(FileInterceptor("file"))
   async upload(
-    id: string,
+    @Param("id") id: string,
     @UploadedFile(
       new ParseFilePipe({
         validators: [

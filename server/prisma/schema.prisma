@@ -80,6 +80,7 @@ enum LiveType {
 
 enum ProcessState {
   UNPROCESSED
+  UPLOADED
   PROCESSING
   PROCESSED
   FAILED

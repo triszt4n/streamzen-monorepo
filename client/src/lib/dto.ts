@@ -10,9 +10,10 @@ export interface VodDto {
   id: number
   title: string
   descMarkdown: string
-  thumbnailUrl: string
+  thumbnailUrl?: string
   createdAt: string
   author: MeDto
   state: string
   availability: string
+  uploadedFilename?: string
 }
