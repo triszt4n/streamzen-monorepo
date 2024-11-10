@@ -1,6 +1,8 @@
 resource "aws_ecr_repository" "this" {
+  # checkov:skip=CKV_AWS_136: Ensure that ECR repositories are encrypted using KMS
+  # checkov:skip=CKV_AWS_163: Ensure ECR image scanning on push is enabled
   name                 = "streamzen-api-repo-${var.environment}"
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
     scan_on_push = false

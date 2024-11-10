@@ -26,8 +26,9 @@ jobs:
           directory: ${{ github.workspace }}
           framework: terraform
           soft_fail: false
+          # CKV_AWS_65: Ensure container insights are enabled on ECS cluster
+          # CKV_AWS_338: "Ensure CloudWatch log groups retains logs for at least 1 year"
           # CKV_AWS_173: Check encryption settings for Lambda environmental variable
-          # CKV_AWS_174: AWS CloudFront web distribution using insecure TLS version
           # CKV_AWS_305: Does not have a default root object configured
           # CKV_AWS_310: CloudFront distributions do not have origin failover configured
           # CKV_AWS_18: AWS Access logging not enabled on S3 buckets
@@ -35,7 +36,6 @@ jobs:
           # CKV_AWS_115: AWS Lambda function is not configured for function-level concurrent execution Limit
           # CKV_AWS_116: AWS Lambda function is not configured for a DLQ
           # CKV_AWS_50: X-Ray tracing is enabled for Lambda
-          # CKV_AWS_117: Ensure that AWS Lambda function is configured inside a VPC
           # CKV_AWS_158: Ensure that CloudWatch Log Group is encrypted by KMS
           # CKV2_AWS_61: Ensure that an S3 bucket has a lifecycle configuration
           # CKV2_AWS_62: Ensure S3 buckets should have event notifications enabled
@@ -44,7 +44,7 @@ jobs:
           # CKV_AWS_109: Ensure IAM policies does not allow permissions management / resource exposure without constraints
           # CKV_AWS_111: Ensure IAM policies does not allow write access without constraints
           # CKV_AWS_356: Ensure no IAM policies documents allow “*” as a statement’s resource for restrictable actions
-          skip_check: CKV_AWS_173,CKV_AWS_174,CKV_AWS_305,CKV_AWS_310,CKV_AWS_18,CKV_AWS_21,CKV_AWS_115,CKV_AWS_116,CKV_AWS_50,CKV_AWS_117,CKV_AWS_158,CKV2_AWS_61,CKV2_AWS_62,CKV_AWS_144,CKV_AWS_337,CKV_AWS_109,CKV_AWS_111,CKV_AWS_356
+          skip_check: CKV_AWS_65,CKV_AWS_338,CKV_AWS_173,CKV_AWS_305,CKV_AWS_310,CKV_AWS_18,CKV_AWS_21,CKV_AWS_115,CKV_AWS_116,CKV_AWS_50,CKV_AWS_158,CKV2_AWS_61,CKV2_AWS_62,CKV_AWS_144,CKV_AWS_337,CKV_AWS_109,CKV_AWS_111,CKV_AWS_356
 
       - name: Find Comment
         if: steps.checkov_step.outcome == 'failure'

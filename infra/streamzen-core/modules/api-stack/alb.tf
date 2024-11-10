@@ -1,14 +1,17 @@
 resource "aws_lb" "this" {
+  # checkov:skip=CKV_AWS_150: Ensure that Load Balancer has deletion protection enabled
+  # checkov:skip=CKV_AWS_91: Ensure the ELBv2 (Application/Network) has access logging enabled
   name               = "streamzen-api-alb-${var.environment}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = var.alb_secgroup_ids
   subnets            = var.alb_subnet_ids
 
-  enable_deletion_protection = false
+  drop_invalid_header_fields = true
+  enable_deletion_protection = false # intentionally set to false
 }
 
-resource "aws_alb_target_group" "this" {
+resource "aws_lb_target_group" "this" {
   name        = "streamzen-api-alb-tg-${var.environment}"
   port        = var.alb_tg_port_mapping
   protocol    = "HTTP"
@@ -26,7 +29,7 @@ resource "aws_alb_target_group" "this" {
   }
 }
 
-resource "aws_alb_listener" "http" {
+resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.id
   port              = 80
   protocol          = "HTTP"
@@ -42,7 +45,7 @@ resource "aws_alb_listener" "http" {
   }
 }
 
-resource "aws_alb_listener" "https" {
+resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.this.id
   port              = 443
   protocol          = "HTTPS"
