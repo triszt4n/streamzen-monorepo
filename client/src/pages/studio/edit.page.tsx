@@ -107,7 +107,7 @@ export const EditVideoPage = () => {
         setUploadError((e as AxiosError)?.message || "Error communicating with server")
       }
     },
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (data /*, variables, context*/) => {
       console.log("upload success", data)
       await refetch()
     },
