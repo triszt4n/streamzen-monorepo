@@ -54,7 +54,7 @@ resource "aws_lb_listener" "https" {
   certificate_arn = var.alb_cert_arn
 
   default_action {
-    target_group_arn = aws_alb_target_group.this.id
+    target_group_arn = aws_lb_target_group.this.id
     type             = "forward"
   }
 }

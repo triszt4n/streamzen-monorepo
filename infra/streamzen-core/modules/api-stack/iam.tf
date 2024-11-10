@@ -22,6 +22,10 @@ data "aws_iam_policy_document" "ecs_service_standard" {
 
 data "aws_iam_policy_document" "ecs_service_s3" {
   statement {
+    principals {
+      type = "*"
+      identifiers = ["*"]
+    }
     effect = "Allow"
     actions = [
       "s3:List*",

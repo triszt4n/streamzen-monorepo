@@ -89,7 +89,7 @@ resource "aws_ecs_service" "this" {
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.this.arn
+    target_group_arn = aws_lb_target_group.this.arn
     container_name   = "streamzen-api-${var.environment}"
     container_port   = var.ecs.port_mapping
   }
