@@ -121,23 +121,23 @@ resource "aws_vpc_endpoint" "ecr_api_endpoint" {
   subnet_ids          = var.api_subnet_ids
 }
 
-resource "aws_vpc_endpoint" "ecs_agent" {
-  vpc_id              = var.vpc_id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecs-agent"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
-  security_group_ids  = var.api_secgroup_ids
-  subnet_ids          = var.api_subnet_ids
-}
+# resource "aws_vpc_endpoint" "ecs_agent" {
+#   vpc_id              = var.vpc_id
+#   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecs-agent"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
+#   security_group_ids  = var.api_secgroup_ids
+#   subnet_ids          = var.api_subnet_ids
+# }
 
-resource "aws_vpc_endpoint" "ecs_telemetry" {
-  vpc_id              = var.vpc_id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecs-telemetry"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
-  security_group_ids  = var.api_secgroup_ids
-  subnet_ids          = var.api_subnet_ids
-}
+# resource "aws_vpc_endpoint" "ecs_telemetry" {
+#   vpc_id              = var.vpc_id
+#   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecs-telemetry"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
+#   security_group_ids  = var.api_secgroup_ids
+#   subnet_ids          = var.api_subnet_ids
+# }
 
 resource "aws_vpc_endpoint" "ecs_logs" {
   vpc_id              = var.vpc_id

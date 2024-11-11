@@ -19,6 +19,13 @@ module "stream-trisz-hu" {
   simple_records = {
   }
   alias_records = {
+    "stream.trisz.hu" = {
+      type = "A"
+      records = [{
+        name    = module.frontend.domain_name
+        zone_id = module.frontend.hosted_zone_id
+      }]
+    }
   }
 }
 
@@ -90,7 +97,7 @@ module "vpc" {
     "streamzen-private-sg" = {
       "in" = {
         type     = "ingress"
-        cidr     = "0.0.0.0/0" // "10.10.10.0/24"
+        cidr     = "10.10.10.0/24"
         protocol = "-1"
       }
       "out" = {
