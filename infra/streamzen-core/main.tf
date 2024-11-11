@@ -140,7 +140,7 @@ module "api" {
     health_check = {
       command = [
         "CMD-SHELL",
-        "curl -f http://localhost:80/api/health || exit 1",
+        "curl -f http://localhost/api/health || exit 1",
       ]
       retries     = 3
       startPeriod = 300
