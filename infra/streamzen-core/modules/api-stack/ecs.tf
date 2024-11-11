@@ -100,7 +100,7 @@ resource "aws_vpc_endpoint" "s3" {
   service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
   vpc_endpoint_type = "Gateway"
   route_table_ids   = var.api_subnet_route_table_ids
-  policy            = data.aws_iam_policy_document.ecs_service_s3.json
+  policy            = data.aws_iam_policy_document.vpce_ecs_service_s3.json
 }
 
 resource "aws_vpc_endpoint" "ecr_dkr_endpoint" {
@@ -133,6 +133,15 @@ resource "aws_vpc_endpoint" "ecs_agent" {
 resource "aws_vpc_endpoint" "ecs_telemetry" {
   vpc_id              = var.vpc_id
   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecs-telemetry"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+  security_group_ids  = var.api_secgroup_ids
+  subnet_ids          = var.api_subnet_ids
+}
+
+resource "aws_vpc_endpoint" "ecs_logs" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.logs"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   security_group_ids  = var.api_secgroup_ids

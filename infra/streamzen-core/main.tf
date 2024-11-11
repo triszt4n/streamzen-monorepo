@@ -90,7 +90,7 @@ module "vpc" {
     "streamzen-private-sg" = {
       "in" = {
         type     = "ingress"
-        cidr     = "10.10.10.0/24"
+        cidr     = "0.0.0.0/0" // "10.10.10.0/24"
         protocol = "-1"
       }
       "out" = {
@@ -167,11 +167,11 @@ module "api" {
   }
 }
 
-module "jumpbox" {
-  source = "./modules/jumpbox"
-  name   = "streamzen-jumpbox-${var.environment}"
+# module "jumpbox" {
+#   source = "./modules/jumpbox"
+#   name   = "streamzen-jumpbox-${var.environment}"
 
-  vpc_id      = module.vpc.vpc_id
-  secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
-  subnet_id   = module.vpc.subnets["streamzen-alb-1a"].id
-}
+#   vpc_id      = module.vpc.vpc_id
+#   secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
+#   subnet_id   = module.vpc.subnets["streamzen-alb-1a"].id
+# }

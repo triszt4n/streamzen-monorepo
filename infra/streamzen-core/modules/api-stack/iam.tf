@@ -39,6 +39,22 @@ data "aws_iam_policy_document" "ecs_service_s3" {
   }
 }
 
+data "aws_iam_policy_document" "vpce_ecs_service_s3" {
+  statement {
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    effect = "Allow"
+    actions = [
+      "*"
+    ]
+    resources = [
+      "*"
+    ]
+  }
+}
+
 data "aws_iam_policy_document" "ecs_service_scaling" {
   statement {
     effect = "Allow"
