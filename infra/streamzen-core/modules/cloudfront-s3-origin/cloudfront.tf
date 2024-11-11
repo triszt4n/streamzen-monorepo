@@ -56,7 +56,7 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   ordered_cache_behavior {
-    path_pattern = "/assets/*"
+    path_pattern = "/media-assets/*"
 
     allowed_methods        = local.allowed_methods_types.all
     cached_methods         = local.cached_methods_types.get_head
