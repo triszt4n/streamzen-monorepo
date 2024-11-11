@@ -144,11 +144,11 @@ module "api" {
   ]
 
   ecs = {
-    dummy_image_tag = "streamzen-dummy-image-tag:5"
+    dummy_image_tag = "streamzen-dummy-image-tag:6"
     health_check = {
       command = [
         "CMD-SHELL",
-        "curl -f http://localhost/api/health || exit 1",
+        "curl -f http://localhost || exit 1",
       ]
       retries     = 3
       startPeriod = 300
