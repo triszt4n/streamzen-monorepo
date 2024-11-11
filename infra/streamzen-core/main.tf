@@ -19,11 +19,18 @@ module "stream-trisz-hu" {
   simple_records = {
   }
   alias_records = {
-    "stream.trisz.hu" = {
+    "${var.domain_name}" = {
       type = "A"
       records = [{
         name    = module.frontend.domain_name
         zone_id = module.frontend.hosted_zone_id
+      }]
+    }
+    "${var.api_domain_name}" = {
+      type = "A"
+      records = [{
+        name    = module.api.alb_dns_name
+        zone_id = module.api.alb_zone_id
       }]
     }
   }
