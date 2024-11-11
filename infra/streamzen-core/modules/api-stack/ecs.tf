@@ -8,7 +8,7 @@ locals {
   ]
 
   # bump this if the task definition changes
-  image_tag = "streamzen-dummy-image-tag:4"
+  image_tag = var.ecs.dummy_image_tag
 }
 
 data "aws_region" "current" {}
