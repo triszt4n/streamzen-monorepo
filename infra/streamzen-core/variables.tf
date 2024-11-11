@@ -17,3 +17,8 @@ variable "api_domain_name" {
   description = "The domain name to use for the ALB"
   type        = string
 }
+
+variable "enable_jumpbox" {
+  default     = false
+  description = "Whether to enable the jumpbox"
+}
