@@ -137,6 +137,7 @@ module "api" {
   ]
 
   ecs = {
+    dummy_image_tag = "streamzen-dummy-image-tag:5"
     health_check = {
       command = [
         "CMD-SHELL",
@@ -162,8 +163,8 @@ module "api" {
       AWS_S3_REGION          = var.region
       AWS_S3_UPLOADED_BUCKET = "streamzen-uploaded-videos-${var.environment}-bucket"
     }
-    memory             = 512
-    cpu                = 256
+    memory             = 1024
+    cpu                = 512
     desired_task_count = 1
   }
 

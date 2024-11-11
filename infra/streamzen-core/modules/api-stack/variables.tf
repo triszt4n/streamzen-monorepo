@@ -37,6 +37,7 @@ variable "ecs" {
     memory             = number
     cpu                = number
     desired_task_count = number
+    dummy_image_tag    = string
   })
 }
 
