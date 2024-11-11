@@ -19,6 +19,13 @@ module "stream-trisz-hu" {
   simple_records = {
   }
   alias_records = {
+    "stream.trisz.hu" = {
+      type = "A"
+      records = [{
+        name    = module.frontend.domain_name
+        zone_id = module.frontend.hosted_zone_id
+      }]
+    }
   }
 }
 
@@ -66,32 +73,39 @@ module "vpc" {
     }
   }
   secgroups = {
-    "streamzen-alb-sg" = [
-      {
+    "streamzen-alb-sg" = {
+      "in-443" = {
         type      = "ingress"
         cidr      = "0.0.0.0/0"
         from_port = 443
         to_port   = 443
         protocol  = "tcp"
-      },
-      {
+      }
+      "in-80" = {
+        type      = "ingress"
+        cidr      = "0.0.0.0/0"
+        from_port = 80
+        to_port   = 80
+        protocol  = "tcp"
+      }
+      "out" = {
         type     = "egress"
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
-    ]
-    "streamzen-private-sg" = [
-      {
+    }
+    "streamzen-private-sg" = {
+      "in" = {
         type     = "ingress"
         cidr     = "10.10.10.0/24"
         protocol = "-1"
-      },
-      {
+      }
+      "out" = {
         type     = "egress"
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
-    ]
+    }
   }
 }
 
@@ -110,6 +124,7 @@ module "api" {
     module.vpc.subnets["streamzen-alb-1a"].id,
     module.vpc.subnets["streamzen-alb-1b"].id,
   ]
+
   api_secgroup_ids = [
     module.vpc.secgroups["streamzen-private-sg"].id,
   ]
@@ -117,12 +132,15 @@ module "api" {
     module.vpc.subnets["streamzen-private-1a"].id,
     module.vpc.subnets["streamzen-private-1b"].id,
   ]
+  api_subnet_route_table_ids = [
+    for subnet in values(module.vpc.subnets) : subnet.route_table_id
+  ]
 
   ecs = {
     health_check = {
       command = [
         "CMD-SHELL",
-        "curl -f http://localhost:80/api/health || exit 1"
+        "curl -f http://localhost/api/health || exit 1",
       ]
       retries     = 3
       startPeriod = 300
@@ -156,11 +174,11 @@ module "api" {
   }
 }
 
-module "jumpbox" {
-  source = "./modules/jumpbox"
-  name   = "streamzen-jumpbox-${var.environment}"
+# module "jumpbox" {
+#   source = "./modules/jumpbox"
+#   name   = "streamzen-jumpbox-${var.environment}"
 
-  vpc_id      = module.vpc.vpc_id
-  secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
-  subnet_id   = module.vpc.subnets["streamzen-alb-1a"].id
-}
+#   vpc_id      = module.vpc.vpc_id
+#   secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
+#   subnet_id   = module.vpc.subnets["streamzen-alb-1a"].id
+# }

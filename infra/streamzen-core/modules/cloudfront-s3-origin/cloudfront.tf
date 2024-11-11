@@ -56,7 +56,7 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   ordered_cache_behavior {
-    path_pattern = "/assets/*"
+    path_pattern = "/media-assets/*"
 
     allowed_methods        = local.allowed_methods_types.all
     cached_methods         = local.cached_methods_types.get_head
@@ -79,6 +79,11 @@ resource "aws_cloudfront_distribution" "frontend" {
     # Attached policies
     cache_policy_id          = data.aws_cloudfront_cache_policy.disabled.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_no_host.id
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.request_function.arn
+    }
   }
 
   restrictions {

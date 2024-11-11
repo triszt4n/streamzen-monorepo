@@ -6,7 +6,7 @@ resource "aws_instance" "this" {
   iam_instance_profile   = aws_iam_instance_profile.this.id
 
   associate_public_ip_address = true
-  
+
   root_block_device {
     volume_size = 10
   }

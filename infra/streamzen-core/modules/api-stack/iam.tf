@@ -22,6 +22,10 @@ data "aws_iam_policy_document" "ecs_service_standard" {
 
 data "aws_iam_policy_document" "ecs_service_s3" {
   statement {
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
     effect = "Allow"
     actions = [
       "s3:List*",
@@ -31,6 +35,22 @@ data "aws_iam_policy_document" "ecs_service_s3" {
     ]
     resources = [
       "arn:aws:s3:::streamzen-*/*"
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "vpce_ecs_service_s3" {
+  statement {
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    effect = "Allow"
+    actions = [
+      "*"
+    ]
+    resources = [
+      "*"
     ]
   }
 }
@@ -63,12 +83,26 @@ data "aws_iam_policy_document" "ecs_service_install" {
   statement {
     effect = "Allow"
     actions = [
-      "ecr:GetAuthorizationToken",
       "ecr:BatchCheckLayerAvailability",
-      "ecr:GetDownloadUrlForLayer",
       "ecr:BatchGetImage",
+      "ecr:DescribeImages",
+      "ecr:DescribeImageScanFindings",
+      "ecr:DescribeRepositories",
+      "ecr:GetAuthorizationToken",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:GetLifecyclePolicy",
+      "ecr:GetLifecyclePolicyPreview",
+      "ecr:GetRepositoryPolicy",
+      "ecr:ListImages",
+      "ecr:ListTagsForResource",
+    ]
+    resources = ["*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
       "logs:CreateLogStream",
-      "logs:PutLogEvents"
+      "logs:PutLogEvents",
     ]
     resources = ["*"]
   }

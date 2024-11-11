@@ -97,15 +97,19 @@ export const EditVideoPage = () => {
 
   const uploadMutation = useMutation({
     mutationFn: async (dto: { file: File }) => {
+      setUploadError(undefined)
       try {
         const formData = new FormData()
         formData.append("file", dto.file)
         await myAxios.post(`/videos/${vod?.id}/upload`, formData)
-        await refetch()
       } catch (e) {
         console.error(e)
         setUploadError((e as AxiosError)?.message || "Error communicating with server")
       }
+    },
+    onSuccess: async (data /*, variables, context*/) => {
+      console.log("upload success", data)
+      await refetch()
     },
   })
 
@@ -177,6 +181,17 @@ export const EditVideoPage = () => {
                           <AlertDescription>{uploadError}</AlertDescription>
                         </Alert>
                       )}
+                    </CardContent>
+                  </Card>
+                )}
+                {vod.state === "UPLOADED" && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Sikeres feltöltés</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-center text-muted-foreground text-sm">
+                      <LoadingSpinner className="inline-block mr-2 mb-0.5" />
+                      Várakozás kapacitásra
                     </CardContent>
                   </Card>
                 )}

@@ -11,7 +11,7 @@ variable "vpc_id" {
 }
 
 variable "rules" {
-  type = list(object({
+  type = map(object({
     type      = string
     cidr      = string
     from_port = optional(number)
