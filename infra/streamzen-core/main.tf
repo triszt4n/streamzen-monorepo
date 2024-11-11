@@ -144,16 +144,16 @@ module "api" {
   ]
 
   ecs = {
-    dummy_image_tag = "streamzen-dummy-image-tag:6"
+    dummy_image_tag = "streamzen-dummy-image-tag:7"
     health_check = {
       command = [
         "CMD-SHELL",
-        "curl -f http://localhost || exit 1",
+        "curl -f http://localhost/ || exit 1",
       ]
       retries     = 3
-      startPeriod = 300
+      startPeriod = 60
       interval    = 5
-      timeout     = 5
+      timeout     = 10
     }
     family_name  = "streamzen-api"
     port_mapping = 80
@@ -171,7 +171,7 @@ module "api" {
       AWS_S3_UPLOADED_BUCKET = "streamzen-uploaded-videos-${var.environment}-bucket"
     }
     memory             = 1024
-    cpu                = 512
+    cpu                = 1024
     desired_task_count = 1
   }
 
