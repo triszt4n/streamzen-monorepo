@@ -113,6 +113,37 @@ module "vpc" {
         protocol = "-1"
       }
     }
+    "streamzen-db-sg" = {
+      "in" = {
+        type      = "ingress"
+        cidr      = "10.10.10.0/24"
+        protocol  = "tcp"
+        from_port = 5432
+        to_port   = 5432
+      }
+      "out" = {
+        type     = "egress"
+        cidr     = "10.10.10.0/24"
+        protocol = "-1"
+      }
+    }
+    "streamzen-api-sg" = {
+      "in" = {
+        type     = "ingress"
+        cidr     = "10.10.10.0/24"
+        protocol = "-1"
+      }
+      "in-sch" = {
+        type     = "ingress"
+        cidr     = "152.66.0.0/16"
+        protocol = "-1"
+      }
+      "out" = {
+        type     = "egress"
+        cidr     = "0.0.0.0/0"
+        protocol = "-1"
+      }
+    }
   }
 }
 
@@ -132,8 +163,11 @@ module "api" {
     module.vpc.subnets["streamzen-alb-1b"].id,
   ]
 
+  db_secgroup_ids = [
+    module.vpc.secgroups["streamzen-db-sg"].id,
+  ]
   api_secgroup_ids = [
-    module.vpc.secgroups["streamzen-private-sg"].id,
+    module.vpc.secgroups["streamzen-alb-sg"].id,
   ]
   api_subnet_ids = [
     module.vpc.subnets["streamzen-private-1a"].id,
@@ -145,16 +179,16 @@ module "api" {
 
   ecs = {
     dummy_image_tag = "streamzen-dummy-image-tag:8"
-    health_check = {
-      command = [
-        "CMD-SHELL",
-        "curl -f http://localhost/ || exit 1",
-      ]
-      retries     = 3
-      startPeriod = 60
-      interval    = 5
-      timeout     = 10
-    }
+    # health_check = {
+    #   command = [
+    #     "CMD-SHELL",
+    #     "curl -f http://localhost:80/ || exit 1",
+    #   ]
+    #   retries     = 3
+    #   startPeriod = 60
+    #   interval    = 5
+    #   timeout     = 10
+    # }
     family_name  = "streamzen-api"
     port_mapping = 80
     task_environment = {
@@ -170,8 +204,8 @@ module "api" {
       AWS_S3_REGION          = var.region
       AWS_S3_UPLOADED_BUCKET = "streamzen-uploaded-videos-${var.environment}-bucket"
     }
-    memory             = 2048
-    cpu                = 1024
+    memory             = 512
+    cpu                = 256
     desired_task_count = 1
   }
 
@@ -183,7 +217,7 @@ module "api" {
 }
 
 module "jumpbox" {
-  count = var.enable_jumpbox ? 1 : 0
+  count  = var.enable_jumpbox ? 1 : 0
   source = "./modules/jumpbox"
   name   = "streamzen-jumpbox-${var.environment}"
 

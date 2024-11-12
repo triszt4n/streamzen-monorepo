@@ -26,7 +26,7 @@ resource "aws_db_instance" "this" {
   password = data.aws_ssm_parameter.db_password.value
   port     = var.db.port
 
-  vpc_security_group_ids = var.api_secgroup_ids
+  vpc_security_group_ids = var.db_secgroup_ids
   db_subnet_group_name   = aws_db_subnet_group.this.name
 
   skip_final_snapshot = true

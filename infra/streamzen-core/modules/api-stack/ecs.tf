@@ -27,7 +27,7 @@ resource "aws_ecs_task_definition" "this" {
     {
       volumes      = []
       mountPoints  = []
-      healthCheck  = var.ecs.health_check
+      healthCheck  = try(var.ecs.health_check, {})
       portMappings = local.port_mappings
       environment = concat(
         [for k, v in var.ecs.task_environment : {

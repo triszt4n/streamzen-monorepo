@@ -24,13 +24,13 @@ variable "alb_tg_port_mapping" {
 
 variable "ecs" {
   type = object({
-    health_check = object({
+    health_check = optional(object({
       command     = list(string)
       retries     = number
       startPeriod = number
       interval    = number
       timeout     = number
-    })
+    }))
     family_name        = string
     port_mapping       = number
     task_environment   = map(string)
@@ -39,6 +39,10 @@ variable "ecs" {
     desired_task_count = number
     dummy_image_tag    = string
   })
+}
+
+variable "db_secgroup_ids" {
+  type = list(string)
 }
 
 variable "api_secgroup_ids" {
