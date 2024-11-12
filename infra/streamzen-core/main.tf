@@ -178,7 +178,7 @@ module "api" {
   ]
 
   ecs = {
-    dummy_image_tag = "streamzen-dummy-image-tag:8"
+    dummy_image_tag = "streamzen-dummy-image-tag:9"
     # health_check = {
     #   command = [
     #     "CMD-SHELL",

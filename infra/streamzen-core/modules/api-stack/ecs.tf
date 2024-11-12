@@ -83,9 +83,9 @@ resource "aws_ecs_service" "this" {
   health_check_grace_period_seconds = 300
 
   network_configuration {
-    subnets          = var.api_subnet_ids
+    subnets          = var.alb_subnet_ids # var.api_subnet_ids if we want to use the private subnet
     security_groups  = var.api_secgroup_ids
-    assign_public_ip = false
+    assign_public_ip = true # false if you have a NAT gateway
   }
 
   load_balancer {
@@ -95,31 +95,42 @@ resource "aws_ecs_service" "this" {
   }
 }
 
-resource "aws_vpc_endpoint" "s3" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
-  vpc_endpoint_type = "Gateway"
-  route_table_ids   = var.api_subnet_route_table_ids
-  policy            = data.aws_iam_policy_document.vpce_ecs_service_s3.json
-}
+# resource "aws_vpc_endpoint" "s3" {
+#   vpc_id            = var.vpc_id
+#   service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+#   vpc_endpoint_type = "Gateway"
+#   route_table_ids   = var.api_subnet_route_table_ids
+#   policy            = data.aws_iam_policy_document.vpce_ecs_service_s3.json
+# }
 
-resource "aws_vpc_endpoint" "ecr_dkr_endpoint" {
-  vpc_id              = var.vpc_id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.dkr"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
-  security_group_ids  = var.api_secgroup_ids
-  subnet_ids          = var.api_subnet_ids
-}
+# resource "aws_vpc_endpoint" "ecr_dkr_endpoint" {
+#   vpc_id              = var.vpc_id
+#   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.dkr"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
+#   security_group_ids  = var.api_secgroup_ids
+#   subnet_ids          = var.api_subnet_ids
+# }
 
-resource "aws_vpc_endpoint" "ecr_api_endpoint" {
-  vpc_id              = var.vpc_id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
-  security_group_ids  = var.api_secgroup_ids
-  subnet_ids          = var.api_subnet_ids
-}
+# resource "aws_vpc_endpoint" "ecr_api_endpoint" {
+#   vpc_id              = var.vpc_id
+#   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
+#   security_group_ids  = var.api_secgroup_ids
+#   subnet_ids          = var.api_subnet_ids
+# }
+
+# resource "aws_vpc_endpoint" "ecs_logs" {
+#   vpc_id              = var.vpc_id
+#   service_name        = "com.amazonaws.${data.aws_region.current.name}.logs"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
+#   security_group_ids  = var.api_secgroup_ids
+#   subnet_ids          = var.api_subnet_ids
+# }
+
+## UNNECESSARY
 
 # resource "aws_vpc_endpoint" "ecs_agent" {
 #   vpc_id              = var.vpc_id
@@ -138,12 +149,3 @@ resource "aws_vpc_endpoint" "ecr_api_endpoint" {
 #   security_group_ids  = var.api_secgroup_ids
 #   subnet_ids          = var.api_subnet_ids
 # }
-
-resource "aws_vpc_endpoint" "ecs_logs" {
-  vpc_id              = var.vpc_id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.logs"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
-  security_group_ids  = var.api_secgroup_ids
-  subnet_ids          = var.api_subnet_ids
-}
