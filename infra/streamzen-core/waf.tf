@@ -45,8 +45,43 @@ resource "aws_wafv2_web_acl" "regional" {
   }
 
   rule {
-    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+    name     = "CheckAPIKey"
     priority = 1
+
+    action {
+      block {}
+    }
+
+    statement {
+      not_statement {
+        statement {
+          byte_match_statement {
+            field_to_match {
+              single_header {
+                name = "x-streamzen-api-key"
+              }
+            }
+            positional_constraint = "EXACTLY"
+            search_string         = data.aws_ssm_parameter.these["alb-api-key"].value
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "CheckAPIKey-metric"
+      sampled_requests_enabled   = false
+    }
+  }
+
+  rule {
+    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+    priority = 2
 
     override_action {
       none {}

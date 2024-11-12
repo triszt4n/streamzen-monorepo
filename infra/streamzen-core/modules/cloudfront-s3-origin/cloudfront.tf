@@ -30,7 +30,7 @@ resource "aws_cloudfront_distribution" "frontend" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
     custom_header {
-      name  = "X-Api-Key"
+      name  = "X-Streamzen-Api-Key"
       value = var.alb_api_key
     }
   }

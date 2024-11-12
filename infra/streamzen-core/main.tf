@@ -144,7 +144,7 @@ module "api" {
   ]
 
   ecs = {
-    dummy_image_tag = "streamzen-dummy-image-tag:7"
+    dummy_image_tag = "streamzen-dummy-image-tag:8"
     health_check = {
       command = [
         "CMD-SHELL",
@@ -170,7 +170,7 @@ module "api" {
       AWS_S3_REGION          = var.region
       AWS_S3_UPLOADED_BUCKET = "streamzen-uploaded-videos-${var.environment}-bucket"
     }
-    memory             = 1024
+    memory             = 2048
     cpu                = 1024
     desired_task_count = 1
   }
@@ -189,5 +189,5 @@ module "jumpbox" {
 
   vpc_id      = module.vpc.vpc_id
   secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
-  subnet_id   = module.vpc.subnets["streamzen-alb-1a"].id
+  subnet_id   = module.vpc.subnets["streamzen-private-1a"].id
 }
