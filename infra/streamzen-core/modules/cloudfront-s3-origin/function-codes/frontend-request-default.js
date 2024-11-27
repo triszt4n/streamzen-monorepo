@@ -5,6 +5,7 @@ const spaInternalRoutingPrefixes = [
   "/courses",
   "/about",
   "/studio",
+  "/login",
 ];
 
 function handler(event) {

@@ -44,6 +44,8 @@ export function translateField(fieldName: "state" | "availability", value: strin
           return "Processing"
         case "FAILED":
           return "Failed"
+        case "UPLOADED":
+          return "Uploaded"
         default:
           return "Streamable"
       }

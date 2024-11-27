@@ -2,6 +2,7 @@ import { AboutPage } from "@/pages/about.page"
 import { CoursesPage } from "@/pages/courses.page"
 import { EventsPage } from "@/pages/events.page"
 import { IndexPage } from "@/pages/index.page"
+import { LoginPage } from "@/pages/login.page"
 import { MembersPage } from "@/pages/members.page"
 import { EditVideoPage } from "@/pages/studio/edit.page"
 import { StudioPage } from "@/pages/studio/studio.page"
@@ -48,6 +49,10 @@ export const routes: StreamzenRouteObject[] = [
     element: <AboutPage />,
     navGroup: "main",
     navTitle: "Rólunk",
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
   },
   // Studio routes
   {

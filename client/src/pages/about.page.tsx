@@ -9,7 +9,7 @@ import { GridVideos } from "@/components/composite/grid-videos"
 
 export const AboutPage = () => {
   return (
-    <MainLayout currentHref="/about" className="max-w-7xl mx-auto">
+    <MainLayout currentHref="/about" className="max-w-7xl mx-auto" publicPage>
       <h1 className="text-4xl font-medium tracking-tight lg:text-5xl font-heading">Budavári Schönherz Stúdió</h1>
       <AboutSection title="Mit csinál egy BSS-es?" imageSrc={img1Url} imageOnLeft={false}>
         <p>
