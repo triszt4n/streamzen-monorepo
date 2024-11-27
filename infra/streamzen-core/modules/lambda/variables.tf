@@ -39,8 +39,8 @@ variable "function_code" {
   type        = string
 }
 
-variable "template_inputs" {
-  description = "Inputs for the function_code if it's a templatefile"
+variable "environment_variables" {
+  description = "The environment variables for the function"
   type        = map(string)
   default     = {}
 }
@@ -48,4 +48,10 @@ variable "template_inputs" {
 variable "timeout" {
   type    = number
   default = 3
+}
+
+variable "notifier_bucket_id" {
+  description = "The ID of the bucket that notifies the function"
+  type        = string
+  default     = null
 }

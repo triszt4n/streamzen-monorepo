@@ -53,6 +53,17 @@ module "api-stream-trisz-hu-cert" {
   zone_id     = module.stream-trisz-hu.zone_id
 }
 
+# NETWORKING COMPONENTS ------------------------------------------------------------
+module "jumpbox" {
+  count  = var.enable_jumpbox ? 1 : 0
+  source = "./modules/jumpbox"
+  name   = "streamzen-jumpbox-${var.environment}"
+
+  vpc_id      = module.vpc.vpc_id
+  secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
+  subnet_id   = module.vpc.subnets["streamzen-private-1a"].id
+}
+
 module "vpc" {
   source = "./modules/protected-vpc"
 
@@ -77,6 +88,16 @@ module "vpc" {
     "streamzen-private-1b" = {
       cidr = "10.10.10.64/28"
       az   = "eu-central-1b"
+    }
+    "streamzen-lambda-1a" = {
+      cidr = "10.10.10.80/28"
+      az   = "eu-central-1a"
+      public = true
+    }
+    "streamzen-lambda-1b" = {
+      cidr = "10.10.10.96/28"
+      az   = "eu-central-1b"
+      public = true
     }
   }
   secgroups = {
@@ -137,6 +158,27 @@ module "vpc" {
         type     = "ingress"
         cidr     = "152.66.0.0/16"
         protocol = "-1"
+      }
+      "out" = {
+        type     = "egress"
+        cidr     = "0.0.0.0/0"
+        protocol = "-1"
+      }
+    }
+    "streamzen-lambda-sg" = {
+      "in-443" = {
+        type      = "ingress"
+        cidr      = "10.10.10.0/24"
+        from_port = 443
+        to_port   = 443
+        protocol  = "tcp"
+      }
+      "in-80" = {
+        type      = "ingress"
+        cidr      = "10.10.10.0/24"
+        from_port = 80
+        to_port   = 80
+        protocol  = "tcp"
       }
       "out" = {
         type     = "egress"
@@ -216,12 +258,42 @@ module "api" {
   }
 }
 
-module "jumpbox" {
-  count  = var.enable_jumpbox ? 1 : 0
-  source = "./modules/jumpbox"
-  name   = "streamzen-jumpbox-${var.environment}"
+# MEDIACONVERT COMPONENTS ------------------------------------------------------------
+data "aws_media_convert_queue" "this" {
+  id = "Default"
+}
 
-  vpc_id      = module.vpc.vpc_id
-  secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
-  subnet_id   = module.vpc.subnets["streamzen-private-1a"].id
+module "job_starter" {
+  source = "../../modules-components/lambda"
+
+  function_name       = "job-starter"
+  function_code       = "job-starter.js"
+  timeout             = 30
+
+  vpc_config = {
+    subnet_ids = [
+      module.vpc.subnets["streamzen-lambda-1a"].id,
+      module.vpc.subnets["streamzen-lambda-1b"].id,
+    ]
+    secgroup_ids = [
+      module.vpc.secgroups["streamzen-lambda-sg"].id,
+    ]
+  }
+
+  environment_variables = {
+    MEDIACONVERT_ENDPOINT = "https://6qbvwvyqc.mediaconvert.eu-central-1.amazonaws.com"
+    JOB_QUEUE_ARN         = data.aws_media_convert_queue.this.arn
+    IAM_ROLE_ARN          = ""
+    OUTPUT_BUCKET_URI     = "s3://${module.frontend.processed_bucket_uri}"
+    INPUT_BUCKET_URI      = "s3://${module.api.uploaded_bucket_uri}"
+  }
+
+  permitted_resources = {
+    s3 = {
+      action     = "lambda:InvokeFunction"
+      principal  = "s3.amazonaws.com"
+      source_arn = module.api.uploaded_bucket_arn
+    }
+  }
+  notifier_bucket_id = module.api.uploaded_bucket_id
 }

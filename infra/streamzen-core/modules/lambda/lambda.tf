@@ -48,12 +48,7 @@ data "archive_file" "lambda" {
   type        = "zip"
   output_path = "/tmp/streamzen-uploadables/${var.function_name}.zip"
   source {
-    content = length(var.template_inputs) > 0 ? templatefile(
-      "${path.module}/function-codes/${var.function_code}",
-      var.template_inputs
-      ) : file(
-      "${path.module}/function-codes/${var.function_code}"
-    )
+    content  = file("${path.module}/function-codes/${var.function_code}")
     filename = "index.js"
   }
 }
@@ -70,11 +65,18 @@ resource "aws_lambda_function" "this" {
   source_code_hash = data.archive_file.lambda.output_base64sha256
   depends_on       = [aws_cloudwatch_log_group.lambda_log_group]
 
-  dynamic vpc_config {
+  dynamic "vpc_config" {
     for_each = var.vpc_config != null ? [1] : []
     content {
-      subnet_ids = var.vpc_config.subnet_ids
-    security_group_ids = var.vpc_config.secgroup_ids
+      subnet_ids         = var.vpc_config.subnet_ids
+      security_group_ids = var.vpc_config.secgroup_ids
+    }
+  }
+
+  dynamic "environment" {
+    for_each = length(var.environment_variables) > 0 ? [1] : []
+    content {
+      variables = var.environment_variables
     }
   }
 }
@@ -94,4 +96,17 @@ resource "aws_lambda_permission" "this" {
   function_url_auth_type = try(each.value.function_url_auth_type, null)
   principal              = each.value.principal
   source_arn             = each.value.source_arn
+}
+
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  count = var.notifier_bucket_id != null ? 1 : 0
+
+  bucket = var.notifier_bucket_id
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.this.arn
+    events              = ["s3:ObjectCreated:*"]
+  }
+
+  depends_on = [aws_lambda_permission.this]
 }
