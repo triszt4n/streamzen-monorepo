@@ -248,7 +248,7 @@ module "api" {
     }
     memory             = 512
     cpu                = 256
-    desired_task_count = 1
+    desired_task_count = 0
   }
 
   db = {
@@ -259,14 +259,10 @@ module "api" {
 }
 
 # MEDIACONVERT COMPONENTS ------------------------------------------------------------
-data "aws_media_convert_queue" "this" {
-  id = "Default"
-}
-
 module "job_starter" {
-  source = "../../modules-components/lambda"
+  source = "./modules/lambda"
 
-  function_name       = "job-starter"
+  function_name       = "job-starter-${var.environment}"
   function_code       = "job-starter.js"
   timeout             = 30
 
@@ -283,7 +279,7 @@ module "job_starter" {
   environment_variables = {
     MEDIACONVERT_ENDPOINT = "https://6qbvwvyqc.mediaconvert.eu-central-1.amazonaws.com"
     JOB_QUEUE_ARN         = data.aws_media_convert_queue.this.arn
-    IAM_ROLE_ARN          = ""
+    IAM_ROLE_ARN          = aws_iam_role.emc_role.arn
     OUTPUT_BUCKET_URI     = "s3://${module.frontend.processed_bucket_uri}"
     INPUT_BUCKET_URI      = "s3://${module.api.uploaded_bucket_uri}"
   }
@@ -296,4 +292,33 @@ module "job_starter" {
     }
   }
   notifier_bucket_id = module.api.uploaded_bucket_id
+}
+
+module "job_finalizer" {
+  source = "./modules/lambda"
+
+  function_name       = "job-finalizer-${var.environment}"
+  function_code       = "job-finalizer.js"
+  timeout             = 30
+
+  vpc_config = {
+    subnet_ids = [
+      module.vpc.subnets["streamzen-lambda-1a"].id,
+      module.vpc.subnets["streamzen-lambda-1b"].id,
+    ]
+    secgroup_ids = [
+      module.vpc.secgroups["streamzen-lambda-sg"].id,
+    ]
+  }
+
+  environment_variables = {
+  }
+
+  # permitted_resources = {
+  #   eventbridge = {
+  #     action     = "lambda:InvokeFunction"
+  #     principal  = "events.amazonaws.com"
+  #     source_arn = "TODO"
+  #   }
+  # }
 }

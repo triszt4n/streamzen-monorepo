@@ -14,15 +14,60 @@ data "aws_iam_policy_document" "logging_policy" {
     effect = "Allow"
     actions = [
       "logs:CreateLogStream",
-      "logs:PutLogEvents"
+      "logs:PutLogEvents",
     ]
     resources = ["arn:aws:logs:*:*:*"]
+  }
+}
+
+data "aws_iam_policy_document" "s3_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+    ]
+    resources = ["arn:aws:s3:::${coalesce(var.notifier_bucket_id, "none")}/*"]
+  }
+}
+
+data "aws_iam_policy_document" "network_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DeleteNetworkInterface",
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:UnassignPrivateIpAddresses",
+    ]
+    resources = ["arn:aws:ec2:*:*:*/*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeVpcs",
+    ]
+    resources = ["*"]
   }
 }
 
 resource "aws_iam_policy" "function_logging_policy" {
   name   = "streamzen-${var.function_name}-logpolicy"
   policy = data.aws_iam_policy_document.logging_policy.json
+}
+
+resource "aws_iam_policy" "function_s3_policy" {
+  count  = var.notifier_bucket_id != null ? 1 : 0
+  name   = "streamzen-${var.function_name}-s3policy"
+  policy = data.aws_iam_policy_document.s3_policy.json
+}
+
+resource "aws_iam_policy" "function_network_policy" {
+  count  = var.vpc_config != null ? 1 : 0
+  name   = "streamzen-${var.function_name}-networkpolicy"
+  policy = data.aws_iam_policy_document.network_policy.json
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
@@ -33,6 +78,18 @@ resource "aws_iam_role" "iam_for_lambda" {
 resource "aws_iam_role_policy_attachment" "function_logging_policy_attachment" {
   role       = aws_iam_role.iam_for_lambda.id
   policy_arn = aws_iam_policy.function_logging_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "function_s3_policy_attachment" {
+  count      = var.notifier_bucket_id != null ? 1 : 0
+  role       = aws_iam_role.iam_for_lambda.id
+  policy_arn = aws_iam_policy.function_s3_policy[0].arn
+}
+
+resource "aws_iam_role_policy_attachment" "function_network_policy_attachment" {
+  count      = var.vpc_config != null ? 1 : 0
+  role       = aws_iam_role.iam_for_lambda.id
+  policy_arn = aws_iam_policy.function_network_policy[0].arn
 }
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
@@ -49,7 +106,7 @@ data "archive_file" "lambda" {
   output_path = "/tmp/streamzen-uploadables/${var.function_name}.zip"
   source {
     content  = file("${path.module}/function-codes/${var.function_code}")
-    filename = "index.js"
+    filename = "index.mjs"
   }
 }
 
