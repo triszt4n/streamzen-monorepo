@@ -140,9 +140,6 @@ export const EditVideoPage = () => {
                 <Video className="h-5 w-5" />
                 <div className="">{vod?.title}</div>
               </h1>
-              <Badge variant="outline" className="ml-auto sm:ml-0">
-                {vod?.availability && translateField("availability", vod?.availability)}
-              </Badge>
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
                 <Button size="sm" type="submit" disabled={files.length > 0}>
                   {files.length > 0 ? "Fejezd be a feltöltést!" : "Változtatások mentése"}
@@ -157,6 +154,22 @@ export const EditVideoPage = () => {
                 <AllowsEditor />
               </div>
               <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex justify-between items-center">
+                      <div>Elérhetőség:</div>
+                      <Badge variant="outline" className="text-md px-3 py-1">
+                        {translateField("availability", vod.availability)}
+                      </Badge>
+                    </CardTitle>
+                    <CardTitle className="flex justify-between items-center">
+                      <div>Feldolgozottság:</div>
+                      <Badge variant="outline" className="text-md px-3 py-1">
+                        {translateField("state", vod.state)}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
                 {vod.state === "UNPROCESSED" && (
                   <Card>
                     <CardHeader>

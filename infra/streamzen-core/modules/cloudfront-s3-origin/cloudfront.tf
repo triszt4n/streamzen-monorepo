@@ -20,19 +20,12 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   origin {
-    origin_id   = "alb-origin"
+    origin_id   = "vpc-origin"
     domain_name = var.alb_domain_name
+  }
 
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
-    custom_header {
-      name  = "X-Api-Key"
-      value = var.alb_api_key
-    }
+  lifecycle {
+    ignore_changes = [origin]
   }
 
   http_version        = "http2"
@@ -47,7 +40,7 @@ resource "aws_cloudfront_distribution" "frontend" {
     allowed_methods        = local.allowed_methods_types.all
     cached_methods         = local.cached_methods_types.get_head
     compress               = true
-    target_origin_id       = "alb-origin"
+    target_origin_id       = "vpc-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     # Attached policies

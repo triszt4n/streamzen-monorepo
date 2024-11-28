@@ -3,9 +3,8 @@ module "frontend" {
 
   environment     = var.environment
   domain_name     = var.domain_name
+  alb_domain_name = module.api.alb_dns_name
   web_acl_arn     = aws_wafv2_web_acl.global.arn
-  alb_domain_name = var.api_domain_name
-  alb_api_key     = data.aws_ssm_parameter.these["alb-api-key"].value
   acm_cert_arn    = module.stream-trisz-hu-cert.arn
 }
 
@@ -19,7 +18,7 @@ module "stream-trisz-hu" {
   simple_records = {
   }
   alias_records = {
-    "stream.trisz.hu" = {
+    "${var.domain_name}" = {
       type = "A"
       records = [{
         name    = module.frontend.domain_name
@@ -39,11 +38,15 @@ module "stream-trisz-hu-cert" {
   }
 }
 
-module "api-stream-trisz-hu-cert" {
-  source = "./modules/acm"
+# NETWORKING COMPONENTS ------------------------------------------------------------
+module "jumpbox" {
+  count  = var.enable_jumpbox ? 1 : 0
+  source = "./modules/jumpbox"
+  name   = "streamzen-jumpbox-${var.environment}"
 
-  domain_name = var.api_domain_name
-  zone_id     = module.stream-trisz-hu.zone_id
+  vpc_id      = module.vpc.vpc_id
+  secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
+  subnet_id   = module.vpc.subnets["streamzen-public-1a"].id
 }
 
 module "vpc" {
@@ -53,12 +56,12 @@ module "vpc" {
   name        = "streamzen-api-vpc"
   cidr        = "10.10.10.0/24"
   subnets = {
-    "streamzen-alb-1a" = {
+    "streamzen-public-1a" = {
       cidr   = "10.10.10.16/28"
       az     = "eu-central-1a"
       public = true
     }
-    "streamzen-alb-1b" = {
+    "streamzen-public-1b" = {
       cidr   = "10.10.10.32/28"
       az     = "eu-central-1b"
       public = true
@@ -71,19 +74,30 @@ module "vpc" {
       cidr = "10.10.10.64/28"
       az   = "eu-central-1b"
     }
+    "streamzen-lambda-1a" = {
+      cidr   = "10.10.10.80/28"
+      az     = "eu-central-1a"
+      public = true
+    }
+    "streamzen-lambda-1b" = {
+      cidr   = "10.10.10.96/28"
+      az     = "eu-central-1b"
+      public = true
+    }
+    "streamzen-alb-1a" = {
+      cidr = "10.10.10.112/28"
+      az   = "eu-central-1a"
+    }
+    "streamzen-alb-1b" = {
+      cidr = "10.10.10.128/28"
+      az   = "eu-central-1b"
+    }
   }
   secgroups = {
     "streamzen-alb-sg" = {
-      "in-443" = {
-        type      = "ingress"
-        cidr      = "0.0.0.0/0"
-        from_port = 443
-        to_port   = 443
-        protocol  = "tcp"
-      }
       "in-80" = {
         type      = "ingress"
-        cidr      = "0.0.0.0/0"
+        cidr      = "10.10.10.0/24"
         from_port = 80
         to_port   = 80
         protocol  = "tcp"
@@ -93,12 +107,70 @@ module "vpc" {
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
+      "cloudfront" = {
+        type      = "cloudfront"
+        from_port = 80
+        to_port   = 80
+        protocol  = "tcp"
+      }
     }
     "streamzen-private-sg" = {
       "in" = {
         type     = "ingress"
         cidr     = "10.10.10.0/24"
         protocol = "-1"
+      }
+      "out" = {
+        type     = "egress"
+        cidr     = "0.0.0.0/0"
+        protocol = "-1"
+      }
+    }
+    "streamzen-db-sg" = {
+      "in" = {
+        type      = "ingress"
+        cidr      = "10.10.10.0/24"
+        protocol  = "tcp"
+        from_port = 5432
+        to_port   = 5432
+      }
+      "out" = {
+        type     = "egress"
+        cidr     = "10.10.10.0/24"
+        protocol = "-1"
+      }
+    }
+    "streamzen-api-sg" = {
+      "in" = {
+        type     = "ingress"
+        cidr     = "10.10.10.0/24"
+        protocol = "-1"
+      }
+      "in-sch" = {
+        type     = "ingress"
+        cidr     = "152.66.0.0/16"
+        protocol = "-1"
+      }
+      "out" = {
+        type     = "egress"
+        cidr     = "0.0.0.0/0"
+        protocol = "-1"
+      }
+    }
+    "streamzen-lambda-sg" = {
+      "in-443" = {
+        type      = "ingress"
+        cidr      = "10.10.10.0/24"
+        from_port = 443
+        to_port   = 443
+        protocol  = "tcp"
+      }
+      "in-80" = {
+        type      = "ingress"
+        cidr      = "10.10.10.0/24"
+        from_port = 80
+        to_port   = 80
+        protocol  = "tcp"
       }
       "out" = {
         type     = "egress"
@@ -115,7 +187,6 @@ module "api" {
   environment = var.environment
   vpc_id      = module.vpc.vpc_id
 
-  alb_cert_arn        = module.api-stream-trisz-hu-cert.arn
   alb_tg_port_mapping = 80
   alb_secgroup_ids = [
     module.vpc.secgroups["streamzen-alb-sg"].id,
@@ -125,29 +196,37 @@ module "api" {
     module.vpc.subnets["streamzen-alb-1b"].id,
   ]
 
-  api_secgroup_ids = [
-    module.vpc.secgroups["streamzen-private-sg"].id,
+  db_secgroup_ids = [
+    module.vpc.secgroups["streamzen-db-sg"].id,
   ]
-  api_subnet_ids = [
+  db_subnet_ids = [
     module.vpc.subnets["streamzen-private-1a"].id,
     module.vpc.subnets["streamzen-private-1b"].id,
+  ]
+
+  api_secgroup_ids = [
+    module.vpc.secgroups["streamzen-api-sg"].id,
+  ]
+  api_subnet_ids = [
+    module.vpc.subnets["streamzen-public-1a"].id,
+    module.vpc.subnets["streamzen-public-1b"].id,
   ]
   api_subnet_route_table_ids = [
     for subnet in values(module.vpc.subnets) : subnet.route_table_id
   ]
 
   ecs = {
-    dummy_image_tag = "streamzen-dummy-image-tag:5"
-    health_check = {
-      command = [
-        "CMD-SHELL",
-        "curl -f http://localhost/api/health || exit 1",
-      ]
-      retries     = 3
-      startPeriod = 300
-      interval    = 5
-      timeout     = 5
-    }
+    dummy_image_tag = "streamzen-dummy-image-tag:9"
+    # health_check = {
+    #   command = [
+    #     "CMD-SHELL",
+    #     "curl -f http://localhost:80/ || exit 1",
+    #   ]
+    #   retries     = 3
+    #   startPeriod = 60
+    #   interval    = 5
+    #   timeout     = 10
+    # }
     family_name  = "streamzen-api"
     port_mapping = 80
     task_environment = {
@@ -163,8 +242,8 @@ module "api" {
       AWS_S3_REGION          = var.region
       AWS_S3_UPLOADED_BUCKET = "streamzen-uploaded-videos-${var.environment}-bucket"
     }
-    memory             = 1024
-    cpu                = 512
+    memory             = 512
+    cpu                = 256
     desired_task_count = 1
   }
 
@@ -175,11 +254,67 @@ module "api" {
   }
 }
 
-# module "jumpbox" {
-#   source = "./modules/jumpbox"
-#   name   = "streamzen-jumpbox-${var.environment}"
+# MEDIACONVERT COMPONENTS ------------------------------------------------------------
+# module "job_starter" {
+#   source = "./modules/lambda"
 
-#   vpc_id      = module.vpc.vpc_id
-#   secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
-#   subnet_id   = module.vpc.subnets["streamzen-alb-1a"].id
+#   function_name       = "job-starter-${var.environment}"
+#   function_code       = "job-starter.js"
+#   timeout             = 30
+
+#   vpc_config = {
+#     subnet_ids = [
+#       module.vpc.subnets["streamzen-lambda-1a"].id,
+#       module.vpc.subnets["streamzen-lambda-1b"].id,
+#     ]
+#     secgroup_ids = [
+#       module.vpc.secgroups["streamzen-lambda-sg"].id,
+#     ]
+#   }
+
+#   environment_variables = {
+#     MEDIACONVERT_ENDPOINT = "https://6qbvwvyqc.mediaconvert.eu-central-1.amazonaws.com"
+#     JOB_QUEUE_ARN         = data.aws_media_convert_queue.this.arn
+#     IAM_ROLE_ARN          = aws_iam_role.emc_role.arn
+#     OUTPUT_BUCKET_URI     = "s3://${module.frontend.processed_bucket_id}"
+#     INPUT_BUCKET_URI      = "s3://${module.api.uploaded_bucket_id}"
+#   }
+
+#   permitted_resources = {
+#     s3 = {
+#       action     = "lambda:InvokeFunction"
+#       principal  = "s3.amazonaws.com"
+#       source_arn = module.api.uploaded_bucket_arn
+#     }
+#   }
+#   notifier_bucket_id = module.api.uploaded_bucket_id
+# }
+
+# module "job_finalizer" {
+#   source = "./modules/lambda"
+
+#   function_name       = "job-finalizer-${var.environment}"
+#   function_code       = "job-finalizer.js"
+#   timeout             = 30
+
+#   vpc_config = {
+#     subnet_ids = [
+#       module.vpc.subnets["streamzen-lambda-1a"].id,
+#       module.vpc.subnets["streamzen-lambda-1b"].id,
+#     ]
+#     secgroup_ids = [
+#       module.vpc.secgroups["streamzen-lambda-sg"].id,
+#     ]
+#   }
+
+#   environment_variables = {
+#   }
+
+#   # permitted_resources = {
+#   #   eventbridge = {
+#   #     action     = "lambda:InvokeFunction"
+#   #     principal  = "events.amazonaws.com"
+#   #     source_arn = "TODO"
+#   #   }
+#   # }
 # }

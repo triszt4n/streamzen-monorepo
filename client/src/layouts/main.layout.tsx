@@ -4,16 +4,30 @@ import { BreadcrumbComposite } from "@/components/breadcrumb-composite"
 import { Footer } from "@/components/footer"
 import { Navbar } from "@/components/navbar"
 import { Toaster } from "@/components/ui/sonner"
+import { useAuth } from "@/hooks/use-auth.hook"
 import { routes } from "@/lib/routes"
+import { Navigate } from "react-router-dom"
 
 interface MainLayoutProps {
   currentHref: string
   navGroup?: string
   className?: string
+  publicPage?: boolean
 }
 
-export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({ children, navGroup = "main", currentHref, className = "" }) => {
+export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
+  children,
+  navGroup = "main",
+  currentHref,
+  className = "",
+  publicPage = false,
+}) => {
+  const { authenticated } = useAuth()
   const routesNavGroup = routes.filter((route) => route.navGroup === navGroup)
+
+  if (!publicPage && !authenticated) {
+    return <Navigate to="/login" />
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col">

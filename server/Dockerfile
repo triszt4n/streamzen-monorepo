@@ -8,6 +8,9 @@ WORKDIR /app
 
 # Copy package.json and yarn.lock to the container
 COPY package.json ./
+COPY yarn.lock ./
+COPY .yarnrc.yml ./
+COPY prisma ./prisma/
 
 # Install the project dependencies using Yarn
 RUN corepack enable
@@ -40,4 +43,4 @@ RUN yarn install --immutable
 RUN npx prisma generate
 
 # Command to run the application
-CMD ["node", "dist/main"]
+CMD ["npm", "run", "start:migrate:prod"]
