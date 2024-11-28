@@ -10,7 +10,7 @@ data "aws_ssm_parameter" "db_password" {
 
 resource "aws_db_subnet_group" "this" {
   name       = "streamzen-rds-subnet-group-${var.environment}"
-  subnet_ids = var.api_subnet_ids
+  subnet_ids = var.db_subnet_ids
 }
 
 resource "aws_db_instance" "this" {

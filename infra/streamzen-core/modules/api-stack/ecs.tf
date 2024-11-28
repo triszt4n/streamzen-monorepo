@@ -83,7 +83,7 @@ resource "aws_ecs_service" "this" {
   health_check_grace_period_seconds = 300
 
   network_configuration {
-    subnets          = var.alb_subnet_ids # var.api_subnet_ids if we want to use the private subnet
+    subnets          = var.api_subnet_ids
     security_groups  = var.api_secgroup_ids
     assign_public_ip = true # false if you have a NAT gateway
   }

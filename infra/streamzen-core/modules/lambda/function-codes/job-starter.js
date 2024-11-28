@@ -140,18 +140,20 @@ const assembleJobCommand = (config) =>
 
 export const handler = async (event, context) => {
   const callerInput = event.Records[0].s3;
+  const config = {
+    jobQueueArn: process.env.JOB_QUEUE_ARN,
+    iamRoleArn: process.env.IAM_ROLE_ARN,
+    outputBucketUri: process.env.OUTPUT_BUCKET_URI,
+    outputDir: callerInput.object.key.split("/")[0],
+    inputBucketUri: process.env.INPUT_BUCKET_URI,
+    filePath: callerInput.object.key,
+  }
 
   try {
-    const jobCommand = assembleJobCommand({
-      jobQueueArn: process.env.JOB_QUEUE_ARN,
-      iamRoleArn: process.env.IAM_ROLE_ARN,
-      outputBucketUri: process.env.OUTPUT_BUCKET_URI,
-      outputDir: callerInput.object.key.split("/")[0],
-      inputBucketUri: process.env.INPUT_BUCKET_URI,
-      filePath: callerInput.object.key,
-    });
+    const jobCommand = assembleJobCommand(config);
+    console.log("[INFO] Job on the way!", config);
     const data = await emcClient.send(jobCommand);
-    console.log("[SUCCESS] Job created!", data);
+    console.log("[INFO] Job created!", data);
     return {
       statusCode: 200,
       body: JSON.stringify(data),

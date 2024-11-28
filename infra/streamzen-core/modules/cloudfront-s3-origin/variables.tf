@@ -11,14 +11,6 @@ variable "web_acl_arn" {
   default = null
 }
 
-variable "alb_domain_name" {
-  type = string
-}
-
-variable "alb_api_key" {
-  type = string
-}
-
 variable "acm_cert_arn" {
   type = string
 }

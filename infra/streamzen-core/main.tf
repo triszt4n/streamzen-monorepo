@@ -1,12 +1,10 @@
 module "frontend" {
   source = "./modules/cloudfront-s3-origin"
 
-  environment     = var.environment
-  domain_name     = var.domain_name
-  web_acl_arn     = aws_wafv2_web_acl.global.arn
-  alb_domain_name = var.api_domain_name
-  alb_api_key     = data.aws_ssm_parameter.these["alb-api-key"].value
-  acm_cert_arn    = module.stream-trisz-hu-cert.arn
+  environment  = var.environment
+  domain_name  = var.domain_name
+  web_acl_arn  = aws_wafv2_web_acl.global.arn
+  acm_cert_arn = module.stream-trisz-hu-cert.arn
 }
 
 module "stream-trisz-hu" {
@@ -26,13 +24,6 @@ module "stream-trisz-hu" {
         zone_id = module.frontend.hosted_zone_id
       }]
     }
-    "${var.api_domain_name}" = {
-      type = "A"
-      records = [{
-        name    = module.api.alb_dns_name
-        zone_id = module.api.alb_zone_id
-      }]
-    }
   }
 }
 
@@ -46,13 +37,6 @@ module "stream-trisz-hu-cert" {
   }
 }
 
-module "api-stream-trisz-hu-cert" {
-  source = "./modules/acm"
-
-  domain_name = var.api_domain_name
-  zone_id     = module.stream-trisz-hu.zone_id
-}
-
 # NETWORKING COMPONENTS ------------------------------------------------------------
 module "jumpbox" {
   count  = var.enable_jumpbox ? 1 : 0
@@ -61,7 +45,7 @@ module "jumpbox" {
 
   vpc_id      = module.vpc.vpc_id
   secgroup_id = module.vpc.secgroups["streamzen-private-sg"].id
-  subnet_id   = module.vpc.subnets["streamzen-private-1a"].id
+  subnet_id   = module.vpc.subnets["streamzen-public-1a"].id
 }
 
 module "vpc" {
@@ -71,12 +55,12 @@ module "vpc" {
   name        = "streamzen-api-vpc"
   cidr        = "10.10.10.0/24"
   subnets = {
-    "streamzen-alb-1a" = {
+    "streamzen-public-1a" = {
       cidr   = "10.10.10.16/28"
       az     = "eu-central-1a"
       public = true
     }
-    "streamzen-alb-1b" = {
+    "streamzen-public-1b" = {
       cidr   = "10.10.10.32/28"
       az     = "eu-central-1b"
       public = true
@@ -90,28 +74,36 @@ module "vpc" {
       az   = "eu-central-1b"
     }
     "streamzen-lambda-1a" = {
-      cidr = "10.10.10.80/28"
-      az   = "eu-central-1a"
+      cidr   = "10.10.10.80/28"
+      az     = "eu-central-1a"
       public = true
     }
     "streamzen-lambda-1b" = {
-      cidr = "10.10.10.96/28"
-      az   = "eu-central-1b"
+      cidr   = "10.10.10.96/28"
+      az     = "eu-central-1b"
       public = true
+    }
+    "streamzen-alb-1a" = {
+      cidr = "10.10.10.112/28"
+      az   = "eu-central-1a"
+    }
+    "streamzen-alb-1b" = {
+      cidr = "10.10.10.128/28"
+      az   = "eu-central-1b"
     }
   }
   secgroups = {
     "streamzen-alb-sg" = {
       "in-443" = {
         type      = "ingress"
-        cidr      = "0.0.0.0/0"
+        cidr      = "10.10.10.0/24"
         from_port = 443
         to_port   = 443
         protocol  = "tcp"
       }
       "in-80" = {
         type      = "ingress"
-        cidr      = "0.0.0.0/0"
+        cidr      = "10.10.10.0/24"
         from_port = 80
         to_port   = 80
         protocol  = "tcp"
@@ -121,6 +113,7 @@ module "vpc" {
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
+      # todo: prefixlist
     }
     "streamzen-private-sg" = {
       "in" = {
@@ -208,12 +201,17 @@ module "api" {
   db_secgroup_ids = [
     module.vpc.secgroups["streamzen-db-sg"].id,
   ]
-  api_secgroup_ids = [
-    module.vpc.secgroups["streamzen-alb-sg"].id,
-  ]
-  api_subnet_ids = [
+  db_subnet_ids = [
     module.vpc.subnets["streamzen-private-1a"].id,
     module.vpc.subnets["streamzen-private-1b"].id,
+  ]
+
+  api_secgroup_ids = [
+    module.vpc.secgroups["streamzen-api-sg"].id,
+  ]
+  api_subnet_ids = [
+    module.vpc.subnets["streamzen-public-1a"].id,
+    module.vpc.subnets["streamzen-public-1b"].id,
   ]
   api_subnet_route_table_ids = [
     for subnet in values(module.vpc.subnets) : subnet.route_table_id
@@ -259,66 +257,66 @@ module "api" {
 }
 
 # MEDIACONVERT COMPONENTS ------------------------------------------------------------
-module "job_starter" {
-  source = "./modules/lambda"
+# module "job_starter" {
+#   source = "./modules/lambda"
 
-  function_name       = "job-starter-${var.environment}"
-  function_code       = "job-starter.js"
-  timeout             = 30
+#   function_name       = "job-starter-${var.environment}"
+#   function_code       = "job-starter.js"
+#   timeout             = 30
 
-  vpc_config = {
-    subnet_ids = [
-      module.vpc.subnets["streamzen-lambda-1a"].id,
-      module.vpc.subnets["streamzen-lambda-1b"].id,
-    ]
-    secgroup_ids = [
-      module.vpc.secgroups["streamzen-lambda-sg"].id,
-    ]
-  }
+#   vpc_config = {
+#     subnet_ids = [
+#       module.vpc.subnets["streamzen-lambda-1a"].id,
+#       module.vpc.subnets["streamzen-lambda-1b"].id,
+#     ]
+#     secgroup_ids = [
+#       module.vpc.secgroups["streamzen-lambda-sg"].id,
+#     ]
+#   }
 
-  environment_variables = {
-    MEDIACONVERT_ENDPOINT = "https://6qbvwvyqc.mediaconvert.eu-central-1.amazonaws.com"
-    JOB_QUEUE_ARN         = data.aws_media_convert_queue.this.arn
-    IAM_ROLE_ARN          = aws_iam_role.emc_role.arn
-    OUTPUT_BUCKET_URI     = "s3://${module.frontend.processed_bucket_uri}"
-    INPUT_BUCKET_URI      = "s3://${module.api.uploaded_bucket_uri}"
-  }
+#   environment_variables = {
+#     MEDIACONVERT_ENDPOINT = "https://6qbvwvyqc.mediaconvert.eu-central-1.amazonaws.com"
+#     JOB_QUEUE_ARN         = data.aws_media_convert_queue.this.arn
+#     IAM_ROLE_ARN          = aws_iam_role.emc_role.arn
+#     OUTPUT_BUCKET_URI     = "s3://${module.frontend.processed_bucket_id}"
+#     INPUT_BUCKET_URI      = "s3://${module.api.uploaded_bucket_id}"
+#   }
 
-  permitted_resources = {
-    s3 = {
-      action     = "lambda:InvokeFunction"
-      principal  = "s3.amazonaws.com"
-      source_arn = module.api.uploaded_bucket_arn
-    }
-  }
-  notifier_bucket_id = module.api.uploaded_bucket_id
-}
+#   permitted_resources = {
+#     s3 = {
+#       action     = "lambda:InvokeFunction"
+#       principal  = "s3.amazonaws.com"
+#       source_arn = module.api.uploaded_bucket_arn
+#     }
+#   }
+#   notifier_bucket_id = module.api.uploaded_bucket_id
+# }
 
-module "job_finalizer" {
-  source = "./modules/lambda"
+# module "job_finalizer" {
+#   source = "./modules/lambda"
 
-  function_name       = "job-finalizer-${var.environment}"
-  function_code       = "job-finalizer.js"
-  timeout             = 30
+#   function_name       = "job-finalizer-${var.environment}"
+#   function_code       = "job-finalizer.js"
+#   timeout             = 30
 
-  vpc_config = {
-    subnet_ids = [
-      module.vpc.subnets["streamzen-lambda-1a"].id,
-      module.vpc.subnets["streamzen-lambda-1b"].id,
-    ]
-    secgroup_ids = [
-      module.vpc.secgroups["streamzen-lambda-sg"].id,
-    ]
-  }
+#   vpc_config = {
+#     subnet_ids = [
+#       module.vpc.subnets["streamzen-lambda-1a"].id,
+#       module.vpc.subnets["streamzen-lambda-1b"].id,
+#     ]
+#     secgroup_ids = [
+#       module.vpc.secgroups["streamzen-lambda-sg"].id,
+#     ]
+#   }
 
-  environment_variables = {
-  }
+#   environment_variables = {
+#   }
 
-  # permitted_resources = {
-  #   eventbridge = {
-  #     action     = "lambda:InvokeFunction"
-  #     principal  = "events.amazonaws.com"
-  #     source_arn = "TODO"
-  #   }
-  # }
-}
+#   # permitted_resources = {
+#   #   eventbridge = {
+#   #     action     = "lambda:InvokeFunction"
+#   #     principal  = "events.amazonaws.com"
+#   #     source_arn = "TODO"
+#   #   }
+#   # }
+# }

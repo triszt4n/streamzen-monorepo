@@ -45,6 +45,10 @@ variable "db_secgroup_ids" {
   type = list(string)
 }
 
+variable "db_subnet_ids" {
+  type = list(string)
+}
+
 variable "api_secgroup_ids" {
   type = list(string)
 }

@@ -1,6 +1,5 @@
 locals {
   secrets = [
-    "alb-api-key",
     "db-password",
     "db-username",
     "api-jwt-secret",

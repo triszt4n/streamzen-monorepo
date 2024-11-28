@@ -48,8 +48,10 @@ data "aws_iam_policy_document" "emc_policy" {
       "s3:PutObjectAcl",
     ]
     resources = [
+      "arn:aws:s3:::${module.api.uploaded_bucket_id}",
+      "arn:aws:s3:::${module.api.uploaded_bucket_id}/*",
       "arn:aws:s3:::${module.frontend.processed_bucket_id}",
-      "arn:aws:s3:::${module.frontend.processed_bucket_id}/*"
+      "arn:aws:s3:::${module.frontend.processed_bucket_id}/*",
     ]
   }
 }
