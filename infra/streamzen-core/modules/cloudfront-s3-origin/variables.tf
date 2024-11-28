@@ -6,6 +6,10 @@ variable "domain_name" {
   type = string
 }
 
+variable "alb_domain_name" {
+  type = string
+}
+
 variable "web_acl_arn" {
   type    = string
   default = null

@@ -1,10 +1,11 @@
 module "frontend" {
   source = "./modules/cloudfront-s3-origin"
 
-  environment  = var.environment
-  domain_name  = var.domain_name
-  web_acl_arn  = aws_wafv2_web_acl.global.arn
-  acm_cert_arn = module.stream-trisz-hu-cert.arn
+  environment     = var.environment
+  domain_name     = var.domain_name
+  alb_domain_name = module.api.alb_dns_name
+  web_acl_arn     = aws_wafv2_web_acl.global.arn
+  acm_cert_arn    = module.stream-trisz-hu-cert.arn
 }
 
 module "stream-trisz-hu" {
@@ -106,12 +107,12 @@ module "vpc" {
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
-      # "cloudfront" = {
-      #   type      = "cloudfront"
-      #   from_port = 80
-      #   to_port   = 80
-      #   protocol  = "tcp"
-      # }
+      "cloudfront-80" = {
+        type      = "cloudfront"
+        from_port = 80
+        to_port   = 80
+        protocol  = "tcp"
+      }
     }
     "streamzen-private-sg" = {
       "in" = {
@@ -243,7 +244,7 @@ module "api" {
     }
     memory             = 512
     cpu                = 256
-    desired_task_count = 0
+    desired_task_count = 1
   }
 
   db = {
