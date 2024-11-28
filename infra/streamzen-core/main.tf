@@ -107,7 +107,7 @@ module "vpc" {
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
-      "cloudfront-80" = {
+      "cloudfront" = {
         type      = "cloudfront"
         from_port = 80
         to_port   = 80
