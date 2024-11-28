@@ -14,10 +14,6 @@ variable "alb_subnet_ids" {
   type = list(string)
 }
 
-variable "alb_cert_arn" {
-  type = string
-}
-
 variable "alb_tg_port_mapping" {
   type = number
 }

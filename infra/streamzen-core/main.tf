@@ -94,13 +94,6 @@ module "vpc" {
   }
   secgroups = {
     "streamzen-alb-sg" = {
-      "in-443" = {
-        type      = "ingress"
-        cidr      = "10.10.10.0/24"
-        from_port = 443
-        to_port   = 443
-        protocol  = "tcp"
-      }
       "in-80" = {
         type      = "ingress"
         cidr      = "10.10.10.0/24"
@@ -113,7 +106,12 @@ module "vpc" {
         cidr     = "0.0.0.0/0"
         protocol = "-1"
       }
-      # todo: prefixlist
+      # "cloudfront" = {
+      #   type      = "cloudfront"
+      #   from_port = 80
+      #   to_port   = 80
+      #   protocol  = "tcp"
+      # }
     }
     "streamzen-private-sg" = {
       "in" = {
@@ -188,7 +186,6 @@ module "api" {
   environment = var.environment
   vpc_id      = module.vpc.vpc_id
 
-  alb_cert_arn        = module.api-stream-trisz-hu-cert.arn
   alb_tg_port_mapping = 80
   alb_secgroup_ids = [
     module.vpc.secgroups["streamzen-alb-sg"].id,
