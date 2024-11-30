@@ -70,3 +70,26 @@ resource "aws_iam_role_policy_attachment" "emc_policy_attachment" {
   role       = aws_iam_role.emc_role.id
   policy_arn = aws_iam_policy.emc_policy.arn
 }
+
+# EVENTBRIDGE COMPONENTS ------------------------------------------------------------
+resource "aws_cloudwatch_event_rule" "this" {
+  name        = "streamzen-mediaconvert-event-rule-${var.environment}"
+  description = "Capture MediaConvert job state changes"
+
+  event_pattern = jsonencode({
+    source = ["aws.mediaconvert"],
+    detail-type =  ["MediaConvert Job State Change"]
+    detail = {
+      status = ["COMPLETE", "ERROR"]
+      userMetadata = {
+        application = ["streamzen-${var.environment}"]
+      }
+    }
+  })
+}
+
+resource "aws_cloudwatch_event_target" "this" {
+  rule      = aws_cloudwatch_event_rule.this.name
+  target_id = "streamzen-mediaconvert-event-target-${var.environment}"
+  arn       = module.job_finalizer.arn
+}
