@@ -140,6 +140,10 @@ const assembleJobCommand = (config) =>
 
 export const handler = async (event, context) => {
   const callerInput = event.Records[0].s3;
+
+  console.log("[INFO] Caller input", callerInput);
+  return;
+
   const config = {
     jobQueueArn: process.env.JOB_QUEUE_ARN,
     iamRoleArn: process.env.IAM_ROLE_ARN,
