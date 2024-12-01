@@ -31,6 +31,7 @@ model Vod {
   thumbnailUrl     String?
 
   state          ProcessState @default(UNPROCESSED)
+  statePercent   Int          @default(0)
   availability   PublishState @default(DRAFT)
   allowDownloads Boolean      @default(true)
   allowShare     Boolean      @default(true)

@@ -7,3 +7,11 @@ output "origin_domain_name" {
 output "invoke_arn" {
   value = aws_lambda_function.this.invoke_arn
 }
+
+output "arn" {
+  value = aws_lambda_function.this.arn
+}
+
+output "role_id" {
+  value = aws_iam_role.iam_for_lambda.id
+}

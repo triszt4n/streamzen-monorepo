@@ -5,7 +5,7 @@ import { ProcessState } from "@prisma/client"
 import { UserDto } from "src/auth/dto/user.dto"
 import { PrismaService } from "src/prisma/prisma.service"
 import { CreateVideoDto } from "./dto/create-video.dto"
-import { UpdateVideoDto } from "./dto/update-video.dto"
+import { UpdateVideoDto, VideoProgressDto } from "./dto/update-video.dto"
 
 @Injectable()
 export class VideoService {
@@ -93,6 +93,28 @@ export class VideoService {
       },
       data: {
         title: updateVideoDto.title,
+      },
+    })
+  }
+
+  async progressUpdate(id: string, videoProgressDto: VideoProgressDto) {
+    const statePercent = videoProgressDto.jobPercentComplete
+    let state: ProcessState = ProcessState.PROCESSING
+    switch (videoProgressDto.status) {
+      case "COMPLETE":
+        state = ProcessState.PROCESSED
+        break
+      case "ERROR":
+        state = ProcessState.FAILED
+        break
+    }
+    return this.prisma.vod.update({
+      where: {
+        id,
+      },
+      data: {
+        statePercent,
+        state,
       },
     })
   }

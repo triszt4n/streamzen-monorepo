@@ -216,7 +216,7 @@ module "api" {
   ]
 
   ecs = {
-    dummy_image_tag = "streamzen-dummy-image-tag:9"
+    dummy_image_tag = "streamzen-dummy-image-tag:10"
     # health_check = {
     #   command = [
     #     "CMD-SHELL",
@@ -253,68 +253,3 @@ module "api" {
     instance_class = "db.t3.micro"
   }
 }
-
-# MEDIACONVERT COMPONENTS ------------------------------------------------------------
-# module "job_starter" {
-#   source = "./modules/lambda"
-
-#   function_name       = "job-starter-${var.environment}"
-#   function_code       = "job-starter.js"
-#   timeout             = 30
-
-#   vpc_config = {
-#     subnet_ids = [
-#       module.vpc.subnets["streamzen-lambda-1a"].id,
-#       module.vpc.subnets["streamzen-lambda-1b"].id,
-#     ]
-#     secgroup_ids = [
-#       module.vpc.secgroups["streamzen-lambda-sg"].id,
-#     ]
-#   }
-
-#   environment_variables = {
-#     MEDIACONVERT_ENDPOINT = "https://6qbvwvyqc.mediaconvert.eu-central-1.amazonaws.com"
-#     JOB_QUEUE_ARN         = data.aws_media_convert_queue.this.arn
-#     IAM_ROLE_ARN          = aws_iam_role.emc_role.arn
-#     OUTPUT_BUCKET_URI     = "s3://${module.frontend.processed_bucket_id}"
-#     INPUT_BUCKET_URI      = "s3://${module.api.uploaded_bucket_id}"
-#   }
-
-#   permitted_resources = {
-#     s3 = {
-#       action     = "lambda:InvokeFunction"
-#       principal  = "s3.amazonaws.com"
-#       source_arn = module.api.uploaded_bucket_arn
-#     }
-#   }
-#   notifier_bucket_id = module.api.uploaded_bucket_id
-# }
-
-# module "job_finalizer" {
-#   source = "./modules/lambda"
-
-#   function_name       = "job-finalizer-${var.environment}"
-#   function_code       = "job-finalizer.js"
-#   timeout             = 30
-
-#   vpc_config = {
-#     subnet_ids = [
-#       module.vpc.subnets["streamzen-lambda-1a"].id,
-#       module.vpc.subnets["streamzen-lambda-1b"].id,
-#     ]
-#     secgroup_ids = [
-#       module.vpc.secgroups["streamzen-lambda-sg"].id,
-#     ]
-#   }
-
-#   environment_variables = {
-#   }
-
-#   # permitted_resources = {
-#   #   eventbridge = {
-#   #     action     = "lambda:InvokeFunction"
-#   #     principal  = "events.amazonaws.com"
-#   #     source_arn = "TODO"
-#   #   }
-#   # }
-# }
