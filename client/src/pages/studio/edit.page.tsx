@@ -120,6 +120,7 @@ export const EditVideoPage = () => {
 
   function onClickUpload() {
     uploadMutation.mutate({ file: files[0] })
+    setFiles([])
   }
 
   function onClickDelete() {
