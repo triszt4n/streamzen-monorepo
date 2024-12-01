@@ -22,7 +22,8 @@ export const handler = async (event, context, callback) => {
         }),
       }
     );
-    console.log("[INFO] Backend response", response.data);
+    const data = await response.json();
+    console.log("[INFO] Backend response", data);
     return {
       statusCode: 200,
       body: JSON.stringify(data),

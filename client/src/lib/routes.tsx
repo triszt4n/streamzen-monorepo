@@ -7,6 +7,7 @@ import { MembersPage } from "@/pages/members.page"
 import { EditVideoPage } from "@/pages/studio/edit.page"
 import { StudioPage } from "@/pages/studio/studio.page"
 import { VideosPage } from "@/pages/videos.page"
+import { VideoPage } from "@/pages/videos/video.page"
 import { RouteObject } from "react-router-dom"
 
 export type StreamzenRouteObject = RouteObject & {
@@ -25,6 +26,11 @@ export const routes: StreamzenRouteObject[] = [
     element: <VideosPage />,
     navGroup: "main",
     navTitle: "Videók",
+  },
+  {
+    path: "/videos/:id",
+    element: <VideoPage />,
+    navTitle: "Videó megtekintése",
   },
   {
     path: "/events",

@@ -3200,6 +3200,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hls.js@npm:1.5.17":
+  version: 1.5.17
+  resolution: "hls.js@npm:1.5.17"
+  checksum: 10c0/37b6fe2c8ed961b0b45ae961035aeafd203ff43aea26f0b63ac1382a05c45415e0e5d2302a2c4e316444e93d438ccd12e7cd36159e4f1fe2c3bfe57f53be3e98
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.1.1":
   version: 4.1.1
   resolution: "http-cache-semantics@npm:4.1.1"
@@ -4557,6 +4564,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:4.6.2"
     eslint-plugin-react-refresh: "npm:0.4.12"
     globals: "npm:15.9.0"
+    hls.js: "npm:1.5.17"
     js-cookie: "npm:3.0.5"
     lucide-react: "npm:0.446.0"
     next-themes: "npm:0.3.0"

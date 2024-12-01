@@ -31,7 +31,7 @@ import { AxiosError } from "axios"
 import { TriangleAlert, Upload, Video } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { z } from "zod"
 
 const schema = z.object({
@@ -120,6 +120,7 @@ export const EditVideoPage = () => {
 
   function onClickUpload() {
     uploadMutation.mutate({ file: files[0] })
+    setFiles([])
   }
 
   function onClickDelete() {
@@ -236,6 +237,18 @@ export const EditVideoPage = () => {
                 )}
                 {vod.state === "PROCESSED" && (
                   <>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Megtekintés</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Link to={`/videos/${vod.id}`}>
+                          <Button size="sm" className="w-full">
+                            Videó megtekintése
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
                     <Card>
                       <CardHeader>
                         <CardTitle>Statisztika</CardTitle>
