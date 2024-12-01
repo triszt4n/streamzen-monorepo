@@ -3,7 +3,3 @@ output "stream-trisz-hu" {
     name_servers = module.stream-trisz-hu.name_servers
   }
 }
-
-output "alb" {
-  value = module.api.alb_dns_name
-}

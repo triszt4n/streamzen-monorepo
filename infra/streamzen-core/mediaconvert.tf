@@ -43,7 +43,7 @@ module "job_finalizer" {
   }
 
   environment_variables = {
-    BACKEND_API_URL = "https://${module.api.alb_dns_name}"
+    BACKEND_API_URL = "http://${module.api.alb_dns_name}/api"
   }
 
   permitted_resources = {
