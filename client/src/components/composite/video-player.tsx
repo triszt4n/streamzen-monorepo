@@ -7,7 +7,7 @@ interface Props {
   height?: number
 }
 
-export const VideoPlayer: React.FC<Props> = ({ src, width = 640, height = 360 }) => {
+export const VideoPlayer: React.FC<Props> = ({ src, width = 1280, height = 720 }) => {
   const ref = React.useRef<HTMLVideoElement>(null)
   useEffect(() => {
     if (ref.current && Hls.isSupported()) {
