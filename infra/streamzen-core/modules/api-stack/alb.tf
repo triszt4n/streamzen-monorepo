@@ -2,13 +2,13 @@ resource "aws_lb" "this" {
   # checkov:skip=CKV_AWS_150: Ensure that Load Balancer has deletion protection enabled
   # checkov:skip=CKV_AWS_91: Ensure the ELBv2 (Application/Network) has access logging enabled
   name               = "streamzen-api-alb-${var.environment}"
-  internal           = false
+  internal           = var.alb_internal
   load_balancer_type = "application"
   security_groups    = var.alb_secgroup_ids
   subnets            = var.alb_subnet_ids
 
   drop_invalid_header_fields = true
-  enable_deletion_protection = false # intentionally set to false
+  enable_deletion_protection = true
 }
 
 resource "aws_lb_target_group" "this" {

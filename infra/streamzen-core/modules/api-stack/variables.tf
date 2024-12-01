@@ -2,16 +2,20 @@ variable "environment" {
   type = string
 }
 
-variable "alb_secgroup_ids" {
-  type = list(string)
-}
-
 variable "vpc_id" {
   type = string
 }
 
 variable "alb_subnet_ids" {
   type = list(string)
+}
+
+variable "alb_secgroup_ids" {
+  type = list(string)
+}
+
+variable "alb_internal" {
+  type = bool
 }
 
 variable "alb_tg_port_mapping" {

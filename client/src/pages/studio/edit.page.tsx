@@ -69,6 +69,7 @@ export const EditVideoPage = () => {
       console.log("vod", response.data)
       return response.data
     },
+    refetchInterval: 10000, // 10 sec
   })
 
   const form = useForm<z.infer<typeof schema>>({

@@ -195,6 +195,7 @@ module "api" {
     module.vpc.subnets["streamzen-alb-1a"].id,
     module.vpc.subnets["streamzen-alb-1b"].id,
   ]
+  alb_internal = true # does not need to be internet-facing
 
   db_secgroup_ids = [
     module.vpc.secgroups["streamzen-db-sg"].id,
@@ -216,7 +217,7 @@ module "api" {
   ]
 
   ecs = {
-    dummy_image_tag = "streamzen-dummy-image-tag:10"
+    dummy_image_tag = "streamzen-dummy-image-tag:11"
     # health_check = {
     #   command = [
     #     "CMD-SHELL",
