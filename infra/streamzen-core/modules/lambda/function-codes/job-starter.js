@@ -11,9 +11,12 @@ const assembleJobCommand = (config) =>
   ({
     Queue: config.jobQueueArn,
     UserMetadata: {
-      application: `streamzen-${process.env.ENVIRONMENT_NAME || "dev"}`,
+      application: `streamzen-${process.env.ENVIRONMENT_NAME}`,
+      id: `${config.id}`,
+      uploadedFilename: `${config.uploadedFilename}`,
     },
     Role: config.iamRoleArn,
+    StatusUpdateInterval: "SECONDS_20", // how often the job status is updated
     Settings: {
       OutputGroups: [
         {
@@ -257,7 +260,7 @@ const assembleJobCommand = (config) =>
               SegmentLength: 10,
               TimedMetadataId3Period: 10,
               CaptionLanguageSetting: "OMIT",
-              Destination: `${config.outputBucketUri}/${config.outputDir}`,
+              Destination: `${config.dest}`, // where the output file will be
               TimedMetadataId3Frame: "PRIV",
               CodecSpecification: "RFC_4281",
               OutputSelection: "MANIFESTS_AND_SEGMENTS",
@@ -472,7 +475,7 @@ const assembleJobCommand = (config) =>
           OutputGroupSettings: {
             Type: "FILE_GROUP_SETTINGS",
             FileGroupSettings: {
-              Destination: `${config.outputBucketUri}/${config.outputDir}`,
+              Destination: `${config.dest}`, // where the output file will be
             },
           },
         },
@@ -499,7 +502,7 @@ const assembleJobCommand = (config) =>
           DenoiseFilter: "DISABLED",
           InputScanType: "AUTO",
           TimecodeSource: "ZEROBASED",
-          FileInput: `${config.inputBucketUri}/${config.filePath}`,
+          FileInput: `${config.origin}`, // where the input file is
         },
       ],
     },
@@ -513,10 +516,10 @@ export const handler = async (event, context) => {
   const config = {
     jobQueueArn: process.env.JOB_QUEUE_ARN,
     iamRoleArn: process.env.IAM_ROLE_ARN,
-    outputBucketUri: process.env.OUTPUT_BUCKET_URI,
-    outputDir: callerInput.object.key.split("/")[0],
-    inputBucketUri: process.env.INPUT_BUCKET_URI,
-    filePath: callerInput.object.key,
+    origin: `${process.env.INPUT_BUCKET_URI}/${callerInput.object.key}`,
+    dest: `${process.env.OUTPUT_BUCKET_URI}/${callerInput.object.key}`,
+    id: callerInput.object.key.split("/")[0],
+    uploadedFilename: callerInput.object.key.split("/")[1],
   };
 
   try {

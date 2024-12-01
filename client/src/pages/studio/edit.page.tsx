@@ -211,10 +211,10 @@ export const EditVideoPage = () => {
                 {vod.state === "PROCESSING" && (
                   <Card>
                     <CardHeader>
-                      <CardTitle>Feldolgozás folyamatban</CardTitle>
+                      <CardTitle>Feldolgozás folyamatban ({vod.statePercent}%)</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <Progress value={33} className="w-full" />
+                      <Progress value={vod.statePercent} className="w-full" />
                     </CardContent>
                   </Card>
                 )}

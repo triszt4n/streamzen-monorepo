@@ -1,6 +1,6 @@
 import { PartialType } from "@nestjs/swagger"
 import { PublishState } from "@prisma/client"
-import { IsString, Matches, MaxLength } from "class-validator"
+import { IsInt, IsString, Matches, MaxLength } from "class-validator"
 import { CreateVideoDto } from "./create-video.dto"
 
 export class UpdateVideoDto extends PartialType(CreateVideoDto) {
@@ -18,4 +18,15 @@ export class UpdateVideoDto extends PartialType(CreateVideoDto) {
   availability: string
 
   crewMembers: string[]
+}
+
+export class VideoProgressDto {
+  @IsString()
+  status: string
+
+  @IsInt()
+  jobPercentComplete: number
+
+  @IsString()
+  uploadedFilename: string
 }

@@ -4,7 +4,7 @@ import { FileInterceptor } from "@nestjs/platform-express"
 import { UserDto } from "src/auth/dto/user.dto"
 import { JwtGuard } from "src/auth/guards/jwt.guard"
 import { CreateVideoDto } from "./dto/create-video.dto"
-import { UpdateVideoDto } from "./dto/update-video.dto"
+import { UpdateVideoDto, VideoProgressDto } from "./dto/update-video.dto"
 import { VideoService } from "./video.service"
 
 @Controller("videos")
@@ -49,6 +49,11 @@ export class VideoController {
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateVideoDto: UpdateVideoDto) {
     return this.videoService.update(id, updateVideoDto)
+  }
+
+  @Patch(":id/progress")
+  progress(@Param("id") id: string, @Body() videoProgressDto: VideoProgressDto) {
+    return this.videoService.progressUpdate(id, videoProgressDto)
   }
 
   @Delete(":id")

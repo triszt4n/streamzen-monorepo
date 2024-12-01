@@ -14,6 +14,7 @@ export interface VodDto {
   createdAt: string
   author: MeDto
   state: string
+  statePercent: number
   availability: string
   uploadedFilename?: string
 }
