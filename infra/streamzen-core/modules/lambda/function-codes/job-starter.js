@@ -8,10 +8,10 @@ const emcClient = new MediaConvertClient({
 });
 
 const assembleJobCommand = (config) =>
-  new CreateJobCommand({
+  ({
     Queue: config.jobQueueArn,
     UserMetadata: {
-      Customer: "Amazon",
+      application: `streamzen-${process.env.ENVIRONMENT_NAME || "dev"}`,
     },
     Role: config.iamRoleArn,
     Settings: {
@@ -257,7 +257,7 @@ const assembleJobCommand = (config) =>
               SegmentLength: 10,
               TimedMetadataId3Period: 10,
               CaptionLanguageSetting: "OMIT",
-              Destination: "[Populated by Lambda]",
+              Destination: `${config.outputBucketUri}/${config.outputDir}`,
               TimedMetadataId3Frame: "PRIV",
               CodecSpecification: "RFC_4281",
               OutputSelection: "MANIFESTS_AND_SEGMENTS",
@@ -472,7 +472,7 @@ const assembleJobCommand = (config) =>
           OutputGroupSettings: {
             Type: "FILE_GROUP_SETTINGS",
             FileGroupSettings: {
-              Destination: "[Populated by Lambda function]",
+              Destination: `${config.outputBucketUri}/${config.outputDir}`,
             },
           },
         },
@@ -499,7 +499,7 @@ const assembleJobCommand = (config) =>
           DenoiseFilter: "DISABLED",
           InputScanType: "AUTO",
           TimecodeSource: "ZEROBASED",
-          FileInput: "[Populated by Lambda function]",
+          FileInput: `${config.inputBucketUri}/${config.filePath}`,
         },
       ],
     },
@@ -521,8 +521,8 @@ export const handler = async (event, context) => {
 
   try {
     const jobCommand = assembleJobCommand(config);
-    console.log("[INFO] Job on the way!", JSON.stringify(config, null, 2));
-    const data = await emcClient.send(jobCommand);
+    console.log("[INFO] Job on the way!", JSON.stringify(jobCommand, null, 2));
+    const data = await emcClient.send(new CreateJobCommand(jobCommand));
     console.log("[INFO] Job created!", data);
     return {
       statusCode: 200,

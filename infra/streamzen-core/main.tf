@@ -258,19 +258,9 @@ module "api" {
 module "job_starter" {
   source = "./modules/lambda"
 
-  function_name       = "job-starter-${var.environment}"
-  function_code       = "job-starter.js"
-  timeout             = 30
-
-  vpc_config = {
-    subnet_ids = [
-      module.vpc.subnets["streamzen-lambda-1a"].id,
-      module.vpc.subnets["streamzen-lambda-1b"].id,
-    ]
-    secgroup_ids = [
-      module.vpc.secgroups["streamzen-lambda-sg"].id,
-    ]
-  }
+  function_name = "job-starter-${var.environment}"
+  function_code = "job-starter.js"
+  timeout       = 60
 
   environment_variables = {
     MEDIACONVERT_ENDPOINT = "https://6qbvwvyqc.mediaconvert.eu-central-1.amazonaws.com"
@@ -293,9 +283,9 @@ module "job_starter" {
 module "job_finalizer" {
   source = "./modules/lambda"
 
-  function_name       = "job-finalizer-${var.environment}"
-  function_code       = "job-finalizer.js"
-  timeout             = 30
+  function_name = "job-finalizer-${var.environment}"
+  function_code = "job-finalizer.js"
+  timeout       = 30
 
   vpc_config = {
     subnet_ids = [
