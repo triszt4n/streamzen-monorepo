@@ -49,10 +49,10 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   lifecycle {
-    # ignore_changes = [
-    #   origin, 
-    #   ordered_cache_behavior.target_origin_id
-    # ]
+    ignore_changes = [
+      origin, 
+      ordered_cache_behavior[0].target_origin_id
+    ]
   }
 
   http_version        = "http2"
