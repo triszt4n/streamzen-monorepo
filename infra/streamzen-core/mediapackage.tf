@@ -1,6 +1,14 @@
 ## SECRET
 resource "aws_secretsmanager_secret" "cdn_auth" {
-  name = "streamze-cdn-auth-${var.environment}"
+  name = "streamzen-cdn-auth-${var.environment}"
+}
+
+resource "aws_secretsmanager_secret_version" "cdn_auth" {
+  secret_id     = aws_secretsmanager_secret.cdn_auth.id
+  secret_string = jsonencode({ "MediaPackageCDNIdentifier" = "dummyvalue" })
+  lifecycle {
+    ignore_changes = [secret_string]
+  }
 }
 
 ## IAM COMPONENTS
@@ -23,7 +31,7 @@ data "aws_iam_policy_document" "emp_policy" {
          "iam:PassRole",
     ]
     resources = [
-      "arn:aws:iam:::role/${aws_iam_role.emp_role.name}",
+      "${aws_iam_role.emp_role.arn}",
     ]
   }
   statement {
@@ -35,7 +43,7 @@ data "aws_iam_policy_document" "emp_policy" {
         "secretsmanager:ListSecretVersionIds",
     ]
     resources = [
-      "arn:aws:secretsmanager:::secret:${aws_secretsmanager_secret.cdn_auth.name}",
+      "${aws_secretsmanager_secret.cdn_auth.arn}",
     ]
   }
 }

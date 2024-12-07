@@ -1,5 +1,6 @@
 const spaInternalRoutingPrefixes = [
   "/videos",
+  "/live",
   "/events",
   "/members",
   "/courses",
