@@ -10,12 +10,6 @@
 			"path": "infra"
 		},
 		{
-			"path": "lambdas/job-finalizer"
-		},
-		{
-			"path": "lambdas/job-starter"
-		},
-		{
 			"path": "infra-bootstrap"
 		},
 		{

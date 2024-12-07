@@ -3,9 +3,9 @@ resource "aws_medialive_input_security_group" "this" {
   whitelist_rules {
     cidr = "152.66.0.0/16" # Schönherz IP range
   }
-  # whitelist_rules {
-  #   cidr = "0.0.0.0/0" # Public IP range
-  # }
+  whitelist_rules {
+    cidr = "0.0.0.0/0" # Public IP range
+  }
 
   tags = {
     secgroup_name = "streamzen-medialive-secgroup-dev"
@@ -26,6 +26,9 @@ resource "aws_medialive_channel" "this" {
   name          = "streamzen-medialive-channel-dev"
   channel_class = "SINGLE_PIPELINE"
   role_arn      = aws_iam_role.medialive_role.arn
+  lifecycle {
+    ignore_changes = [start_channel] # We manage the starting of the channel from the API
+  }
 
   input_specification {
     codec            = "AVC"
