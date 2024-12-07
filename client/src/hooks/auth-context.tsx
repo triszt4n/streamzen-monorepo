@@ -3,6 +3,7 @@ import { useMe } from "./use-me.hook"
 
 type AuthContextType = {
   authenticated: boolean
+  isLoading: boolean
   login: () => void
   logout: () => void
 }
@@ -10,7 +11,7 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const { data } = useMe()
+  const { data, isLoading } = useMe()
 
   const onLogin = async () => {
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/login`
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const value = {
     authenticated: !!data,
+    isLoading,
     login: onLogin,
     logout: onLogout,
   }

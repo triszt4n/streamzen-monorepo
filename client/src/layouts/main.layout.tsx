@@ -2,6 +2,7 @@ import bgPattern from "@/assets/bg-pattern.svg"
 
 import { BreadcrumbComposite } from "@/components/breadcrumb-composite"
 import { Footer } from "@/components/footer"
+import { LoadingSpinner } from "@/components/loading-spinner"
 import { Navbar } from "@/components/navbar"
 import { Toaster } from "@/components/ui/sonner"
 import { useAuth } from "@/hooks/use-auth.hook"
@@ -22,8 +23,28 @@ export const MainLayout: React.FC<React.PropsWithChildren<MainLayoutProps>> = ({
   className = "",
   publicPage = false,
 }) => {
-  const { authenticated } = useAuth()
+  const { authenticated, isLoading } = useAuth()
   const routesNavGroup = routes.filter((route) => route.navGroup === navGroup)
+
+  if (!publicPage && isLoading) {
+    return (
+      <div className="flex min-h-screen w-full flex-col">
+        <Navbar routesNavGroup={routesNavGroup} currentHref={currentHref} navGroup={navGroup} />
+        <div
+          className="flex min-h-[calc(100vh_-_theme(spacing.84))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8"
+          style={{ background: `url(${bgPattern}) 20px 20px repeat` }}
+        >
+          <BreadcrumbComposite />
+          <main>
+            <div className="flex justify-center">
+              <LoadingSpinner />
+            </div>
+          </main>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
 
   if (!publicPage && !authenticated) {
     return <Navigate to="/login" />
