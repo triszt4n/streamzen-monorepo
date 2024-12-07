@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "emp_policy" {
     effect = "Allow"
     actions = [
       "iam:GetRole",
-         "iam:PassRole",
+      "iam:PassRole",
     ]
     resources = [
       "${aws_iam_role.emp_role.arn}",
@@ -38,9 +38,9 @@ data "aws_iam_policy_document" "emp_policy" {
     effect = "Allow"
     actions = [
       "secretsmanager:GetSecretValue",
-        "secretsmanager:DescribeSecret",
-        "secretsmanager:ListSecrets",
-        "secretsmanager:ListSecretVersionIds",
+      "secretsmanager:DescribeSecret",
+      "secretsmanager:ListSecrets",
+      "secretsmanager:ListSecretVersionIds",
     ]
     resources = [
       "${aws_secretsmanager_secret.cdn_auth.arn}",

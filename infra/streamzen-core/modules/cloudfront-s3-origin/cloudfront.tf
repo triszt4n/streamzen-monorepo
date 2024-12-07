@@ -50,7 +50,7 @@ resource "aws_cloudfront_distribution" "frontend" {
 
   lifecycle {
     ignore_changes = [
-      origin, 
+      origin,
       ordered_cache_behavior[0].target_origin_id
     ]
   }
