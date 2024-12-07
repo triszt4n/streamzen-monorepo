@@ -5,7 +5,7 @@ export const LivePage = () => {
   return (
     <MainLayout currentHref="/live" className="max-w-6xl mx-auto">
       <div className="w-full flex justify-center">
-        <VideoPlayer src={`${import.meta.env.LIVE_PATH}`} />
+        <VideoPlayer src={`${import.meta.env.VITE_LIVE_PATH}`} />
       </div>
     </MainLayout>
   )
