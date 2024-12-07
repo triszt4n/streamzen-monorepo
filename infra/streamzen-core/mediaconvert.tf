@@ -75,15 +75,19 @@ data "aws_iam_policy_document" "emc_policy" {
   statement {
     effect = "Allow"
     actions = [
-      "cloudwatch:*",
-      "logs:*",
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams",
+      "logs:DescribeLogGroups",
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:logs:*:*:*",
+    ]
   }
   statement {
     effect = "Allow"
     actions = [
-      "s3:ListBucket",
       "s3:GetBucketLocation",
       "s3:ListAllMyBuckets",
       "s3:GetObject",
@@ -126,7 +130,6 @@ data "aws_iam_policy_document" "lambda_emc_policy" {
   statement {
     effect = "Allow"
     actions = [
-      "s3:ListBucket",
       "s3:GetBucketLocation",
       "s3:ListAllMyBuckets",
       "s3:GetObject",

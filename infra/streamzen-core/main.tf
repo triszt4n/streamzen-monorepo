@@ -1,3 +1,7 @@
+data "aws_secretsmanager_secret_version" "cdn_auth" {
+  secret_id = aws_secretsmanager_secret.cdn_auth.id
+}
+
 module "frontend" {
   source = "./modules/cloudfront-s3-origin"
 
@@ -6,6 +10,9 @@ module "frontend" {
   alb_domain_name = module.api.alb_dns_name
   web_acl_arn     = aws_wafv2_web_acl.global.arn
   acm_cert_arn    = module.stream-trisz-hu-cert.arn
+
+  mediapackage_origin_domain_name    = var.mediapackage_origin_domain_name
+  secret_mediapackage_cdn_identifier = jsondecode(data.aws_secretsmanager_secret_version.cdn_auth.secret_string)["MediaPackageCDNIdentifier"]
 }
 
 module "stream-trisz-hu" {

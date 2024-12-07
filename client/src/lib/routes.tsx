@@ -2,6 +2,7 @@ import { AboutPage } from "@/pages/about.page"
 import { CoursesPage } from "@/pages/courses.page"
 import { EventsPage } from "@/pages/events.page"
 import { IndexPage } from "@/pages/index.page"
+import { LivePage } from "@/pages/live/live.page"
 import { LoginPage } from "@/pages/login.page"
 import { MembersPage } from "@/pages/members.page"
 import { EditVideoPage } from "@/pages/studio/edit.page"
@@ -31,6 +32,11 @@ export const routes: StreamzenRouteObject[] = [
     path: "/videos/:id",
     element: <VideoPage />,
     navTitle: "Videó megtekintése",
+  },
+  {
+    path: "/live",
+    element: <LivePage />,
+    navTitle: "Élő megtekintése",
   },
   {
     path: "/events",

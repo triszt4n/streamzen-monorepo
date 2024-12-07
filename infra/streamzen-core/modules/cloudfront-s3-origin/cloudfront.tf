@@ -20,12 +20,39 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   origin {
+    origin_id   = "live-origin"
+    domain_name = var.mediapackage_origin_domain_name
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+
+    custom_header {
+      name  = "X-MediaPackage-CDNIdentifier"
+      value = var.secret_mediapackage_cdn_identifier
+    }
+  }
+
+  origin {
     origin_id   = "vpc-origin"
     domain_name = var.alb_domain_name
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
   }
 
   lifecycle {
-    ignore_changes = [origin]
+    ignore_changes = [
+      origin,
+      ordered_cache_behavior[0].target_origin_id
+    ]
   }
 
   http_version        = "http2"
@@ -55,6 +82,26 @@ resource "aws_cloudfront_distribution" "frontend" {
     cached_methods         = local.cached_methods_types.get_head
     compress               = true
     target_origin_id       = "assets-origin"
+    viewer_protocol_policy = "redirect-to-https"
+
+    # Attached policies
+    cache_policy_id            = data.aws_cloudfront_cache_policy.disabled.id
+    origin_request_policy_id   = data.aws_cloudfront_origin_request_policy.all_no_host.id
+    response_headers_policy_id = data.aws_cloudfront_response_headers_policy.cors.id
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.url_rewrite_function.arn
+    }
+  }
+
+  ordered_cache_behavior {
+    path_pattern = "/media-live/*"
+
+    allowed_methods        = local.allowed_methods_types.all
+    cached_methods         = local.cached_methods_types.get_head
+    compress               = true
+    target_origin_id       = "live-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     # Attached policies

@@ -9,5 +9,5 @@ resource "aws_cloudfront_function" "url_rewrite_function" {
   name    = "streamzen-media-assets-function-${var.environment}"
   runtime = "cloudfront-js-2.0"
   publish = true
-  code    = file("${path.module}/function-codes/media-assets-url-rewrite.js")
+  code    = file("${path.module}/function-codes/url-rewrite.js")
 }

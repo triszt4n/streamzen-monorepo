@@ -13,6 +13,11 @@ variable "domain_name" {
   type        = string
 }
 
+variable "mediapackage_origin_domain_name" {
+  description = "The domain name of the MediaPackage origin (cant be managed by Terraform)"
+  type        = string
+}
+
 variable "enable_jumpbox" {
   default     = false
   description = "Whether to enable the jumpbox"
