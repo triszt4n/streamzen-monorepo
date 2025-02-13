@@ -204,7 +204,6 @@ module "api" {
     module.vpc.subnets["streamzen-alb-1b"].id,
   ]
   alb_internal = true # does not need to be internet-facing
-  alb_enabled  = var.enable_alb
 
   db_secgroup_ids = [
     module.vpc.secgroups["streamzen-db-sg"].id,
