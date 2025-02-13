@@ -22,3 +22,8 @@ variable "enable_jumpbox" {
   default     = false
   description = "Whether to enable the jumpbox"
 }
+
+variable "enable_ecs" {
+  default     = false
+  description = "Whether to enable the ECS stack"
+}

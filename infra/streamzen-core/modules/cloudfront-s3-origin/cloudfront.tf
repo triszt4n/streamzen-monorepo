@@ -1,3 +1,18 @@
+resource "aws_cloudfront_vpc_origin" "alb" {
+  vpc_origin_endpoint_config {
+    name                   = "vpc-origin"
+    arn                    = var.alb_arn
+    http_port              = 80
+    https_port             = 443
+    origin_protocol_policy = "http-only" # terminate SSL at ALB
+
+    origin_ssl_protocols {
+      items    = ["TLSv1.2"]
+      quantity = 1
+    }
+  }
+}
+
 resource "aws_cloudfront_distribution" "frontend" {
   enabled = true
   staging = false
@@ -40,11 +55,8 @@ resource "aws_cloudfront_distribution" "frontend" {
     origin_id   = "vpc-origin"
     domain_name = var.alb_domain_name
 
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
+    vpc_origin_config {
+      vpc_origin_id = aws_cloudfront_vpc_origin.alb.id
     }
   }
 

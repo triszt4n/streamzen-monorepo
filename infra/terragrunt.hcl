@@ -62,6 +62,7 @@ inputs = {
   region         = local.provider_main_region
   domain_name    = "stream.trisz.hu"
   enable_jumpbox = false
+  enable_ecs     = false
 
   mediapackage_origin_domain_name = "77a9713d04705c2d.mediapackage.eu-central-1.amazonaws.com"
 }

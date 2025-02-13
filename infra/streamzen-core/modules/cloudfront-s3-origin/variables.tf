@@ -10,6 +10,10 @@ variable "alb_domain_name" {
   type = string
 }
 
+variable "alb_arn" {
+  type = string
+}
+
 variable "mediapackage_origin_domain_name" {
   type = string
 }
