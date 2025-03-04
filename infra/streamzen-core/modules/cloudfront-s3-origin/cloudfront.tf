@@ -67,7 +67,7 @@ resource "aws_cloudfront_distribution" "frontend" {
     ]
   }
 
-  http_version        = "http2"
+  http_version        = "http2and3"
   is_ipv6_enabled     = true
   price_class         = "PriceClass_100"
   retain_on_delete    = false
