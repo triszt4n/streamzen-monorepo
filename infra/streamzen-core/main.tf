@@ -8,6 +8,7 @@ module "frontend" {
   environment     = var.environment
   domain_name     = var.domain_name
   alb_domain_name = module.api.alb_dns_name
+  alb_arn         = module.api.alb_arn
   web_acl_arn     = aws_wafv2_web_acl.global.arn
   acm_cert_arn    = module.stream-trisz-hu-cert.arn
 
@@ -252,7 +253,7 @@ module "api" {
     }
     memory             = 512
     cpu                = 256
-    desired_task_count = 1
+    desired_task_count = var.enable_ecs ? 1 : 0
   }
 
   db = {
