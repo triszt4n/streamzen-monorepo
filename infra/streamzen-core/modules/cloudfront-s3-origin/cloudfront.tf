@@ -60,13 +60,6 @@ resource "aws_cloudfront_distribution" "frontend" {
     }
   }
 
-  lifecycle {
-    ignore_changes = [
-      origin,
-      ordered_cache_behavior[0].target_origin_id
-    ]
-  }
-
   http_version        = "http2and3"
   is_ipv6_enabled     = true
   price_class         = "PriceClass_100"
