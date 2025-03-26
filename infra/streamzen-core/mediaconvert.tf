@@ -6,6 +6,16 @@ module "job_starter" {
   function_code = "job-starter.js"
   timeout       = 60
 
+  vpc_config = {
+    subnet_ids = [
+      module.vpc.subnets["streamzen-lambda-1a"].id,
+      module.vpc.subnets["streamzen-lambda-1b"].id,
+    ]
+    secgroup_ids = [
+      module.vpc.secgroups["streamzen-lambda-sg"].id,
+    ]
+  }
+
   environment_variables = {
     MEDIACONVERT_ENDPOINT = "https://6qbvwvyqc.mediaconvert.eu-central-1.amazonaws.com"
     JOB_QUEUE_ARN         = data.aws_media_convert_queue.this.arn
@@ -44,6 +54,32 @@ module "job_finalizer" {
 
   environment_variables = {
     BACKEND_API_URL = "http://${module.api.alb_dns_name}/api"
+  }
+
+  permitted_resources = {
+    eventbridge = {
+      action     = "lambda:InvokeFunction"
+      principal  = "events.amazonaws.com"
+      source_arn = aws_cloudwatch_event_rule.this.arn
+    }
+  }
+}
+
+module "live_ready" {
+  source = "./modules/lambda"
+
+  function_name = "live-ready-${var.environment}"
+  function_code = "live-ready.js"
+  timeout       = 30
+
+  vpc_config = {
+    subnet_ids = [
+      module.vpc.subnets["streamzen-lambda-1a"].id,
+      module.vpc.subnets["streamzen-lambda-1b"].id,
+    ]
+    secgroup_ids = [
+      module.vpc.secgroups["streamzen-lambda-sg"].id,
+    ]
   }
 
   permitted_resources = {
