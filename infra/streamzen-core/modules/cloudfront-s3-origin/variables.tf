@@ -30,3 +30,8 @@ variable "acm_cert_arn" {
 variable "secret_mediapackage_cdn_identifier" {
   type = string
 }
+
+variable "enable_distro" {
+  type    = bool
+  default = false
+}

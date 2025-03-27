@@ -14,7 +14,7 @@ resource "aws_cloudfront_vpc_origin" "alb" {
 }
 
 resource "aws_cloudfront_distribution" "frontend" {
-  enabled = true
+  enabled = var.enable_distro
   staging = false
   comment = "streamzen-frontend-distro-${var.environment}"
   aliases = [var.domain_name]

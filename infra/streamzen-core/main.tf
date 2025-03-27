@@ -11,6 +11,7 @@ module "frontend" {
   alb_arn         = module.api.alb_arn
   web_acl_arn     = aws_wafv2_web_acl.global.arn
   acm_cert_arn    = module.stream-trisz-hu-cert.arn
+  enable_distro   = var.enable_distro
 
   mediapackage_origin_domain_name    = var.mediapackage_origin_domain_name
   secret_mediapackage_cdn_identifier = jsondecode(data.aws_secretsmanager_secret_version.cdn_auth.secret_string)["MediaPackageCDNIdentifier"]
@@ -196,48 +197,21 @@ module "api" {
   vpc_id      = module.vpc.vpc_id
 
   alb_tg_port_mapping = 80
-  alb_secgroup_ids = [
-    module.vpc.secgroups["streamzen-alb-sg"].id,
-  ]
-  alb_subnet_ids = [
-    module.vpc.subnets["streamzen-alb-1a"].id,
-    module.vpc.subnets["streamzen-alb-1b"].id,
-  ]
-  alb_internal = true # does not need to be internet-facing
+  alb_secgroup_ids    = [module.vpc.secgroups["streamzen-alb-sg"].id]
+  alb_subnet_ids      = [module.vpc.subnets["streamzen-alb-1a"].id, module.vpc.subnets["streamzen-alb-1b"].id]
+  alb_internal        = true # does not need to be internet-facing
 
-  db_secgroup_ids = [
-    module.vpc.secgroups["streamzen-db-sg"].id,
-  ]
-  db_subnet_ids = [
-    module.vpc.subnets["streamzen-private-1a"].id,
-    module.vpc.subnets["streamzen-private-1b"].id,
-  ]
+  db_secgroup_ids = [module.vpc.secgroups["streamzen-db-sg"].id]
+  db_subnet_ids   = [module.vpc.subnets["streamzen-private-1a"].id, module.vpc.subnets["streamzen-private-1b"].id]
 
-  api_secgroup_ids = [
-    module.vpc.secgroups["streamzen-api-sg"].id,
-  ]
-  api_subnet_ids = [
-    module.vpc.subnets["streamzen-public-1a"].id,
-    module.vpc.subnets["streamzen-public-1b"].id,
-  ]
-  api_subnet_route_table_ids = [
-    for subnet in values(module.vpc.subnets) : subnet.route_table_id
-  ]
+  api_secgroup_ids           = [module.vpc.secgroups["streamzen-api-sg"].id]
+  api_subnet_ids             = [module.vpc.subnets["streamzen-public-1a"].id, module.vpc.subnets["streamzen-public-1b"].id]
+  api_subnet_route_table_ids = [for s in values(module.vpc.subnets) : s.route_table_id]
 
   ecs = {
     dummy_image_tag = "streamzen-dummy-image-tag:11"
-    # health_check = {
-    #   command = [
-    #     "CMD-SHELL",
-    #     "curl -f http://localhost:80/ || exit 1",
-    #   ]
-    #   retries     = 3
-    #   startPeriod = 60
-    #   interval    = 5
-    #   timeout     = 10
-    # }
-    family_name  = "streamzen-api"
-    port_mapping = 80
+    family_name     = "streamzen-api"
+    port_mapping    = 80
     task_environment = {
       PORT                   = "80"
       AUTHSCH_CLIENT_ID      = data.aws_ssm_parameter.these["authsch-client-id"].value
