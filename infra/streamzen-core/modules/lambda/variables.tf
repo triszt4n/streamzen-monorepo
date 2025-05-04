@@ -5,7 +5,7 @@ variable "function_name" {
 
 variable "function_runtime" {
   type    = string
-  default = "nodejs20.x"
+  default = "nodejs22.x"
 }
 
 variable "permitted_resources" {
