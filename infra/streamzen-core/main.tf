@@ -84,14 +84,12 @@ module "vpc" {
       az   = "eu-central-1b"
     }
     "streamzen-lambda-1a" = {
-      cidr   = "10.10.10.80/28"
-      az     = "eu-central-1a"
-      public = true
+      cidr = "10.10.10.80/28"
+      az   = "eu-central-1a"
     }
     "streamzen-lambda-1b" = {
-      cidr   = "10.10.10.96/28"
-      az     = "eu-central-1b"
-      public = true
+      cidr = "10.10.10.96/28"
+      az   = "eu-central-1b"
     }
     "streamzen-alb-1a" = {
       cidr = "10.10.10.112/28"
