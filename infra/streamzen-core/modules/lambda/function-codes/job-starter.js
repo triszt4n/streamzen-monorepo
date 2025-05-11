@@ -23,6 +23,7 @@ const assembleJobCommand = (config) =>
           CustomName: "hls_out",
           Name: "Apple HLS",
           Outputs: [
+            // 1080p settings
             {
               ContainerSettings: {
                 Container: "M3U8",
@@ -85,6 +86,8 @@ const assembleJobCommand = (config) =>
               },
               NameModifier: "_1080p",
             },
+
+            // 720p settings
             {
               ContainerSettings: {
                 Container: "M3U8",
@@ -149,6 +152,8 @@ const assembleJobCommand = (config) =>
               },
               NameModifier: "_720p",
             },
+
+            // 480p settings
             {
               ContainerSettings: {
                 Container: "M3U8",
@@ -183,6 +188,8 @@ const assembleJobCommand = (config) =>
               },
               NameModifier: "_480p",
             },
+
+            // 360p settings
             {
               ContainerSettings: {
                 Container: "M3U8",
@@ -222,7 +229,7 @@ const assembleJobCommand = (config) =>
             Type: "HLS_GROUP_SETTINGS",
             HlsGroupSettings: {
               ManifestDurationFormat: "INTEGER",
-              SegmentLength: 10,
+              SegmentLength: config.segmentLength, // segment length in seconds
               TimedMetadataId3Period: 10,
               CaptionLanguageSetting: "OMIT",
               Destination: `${config.dest}`, // where the output file will be
@@ -284,6 +291,7 @@ export const handler = async (event, context) => {
     dest: `${process.env.OUTPUT_BUCKET_URI}/${callerInput.object.key}`,
     id: callerInput.object.key.split("/")[0],
     uploadedFilename: callerInput.object.key.split("/")[1],
+    segmentLength: process.env.SEGMENT_LENGTH ?? 6,
   };
 
   try {
