@@ -1,0 +1,88 @@
+❯ k6 run script2.js --summary-mode="full"
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: script2.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 100 max VUs, 2m30s max duration (incl. graceful stop):
+              * contacts: 20 iterations for each of 100 VUs (maxDuration: 2m0s, gracefulStop: 30s)
+
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......................: 2352   18.0118/s
+    checks_succeeded...................: 66.66% 1568 out of 2352
+    checks_failed......................: 33.33% 784 out of 2352
+
+    ✓ is status 200
+    ✓ is loaded
+    ✗ is cached
+      ↳  0% — ✓ 0 / ✗ 784
+
+    HTTP
+    http_req_blocked........................................................: avg=42.02ms  min=0s       med=0s       max=3.6s   p(90)=100.3ms  p(95)=136.92ms
+    http_req_connecting.....................................................: avg=5.53ms   min=0s       med=0s       max=45.6ms p(90)=42.33ms  p(95)=43.6ms  
+    http_req_duration.......................................................: avg=15.97s   min=896.31ms med=16.09s   max=49.34s p(90)=24.82s   p(95)=27.94s  
+      { expected_response:true }............................................: avg=15.97s   min=896.31ms med=16.09s   max=49.34s p(90)=24.82s   p(95)=27.94s  
+    http_req_failed.........................................................: 0.00%  0 out of 784
+    http_req_receiving......................................................: avg=15.8s    min=759.42ms med=15.93s   max=49.1s  p(90)=24.67s   p(95)=27.75s  
+    http_req_sending........................................................: avg=41.19µs  min=16µs     med=33µs     max=1.9ms  p(90)=61µs     p(95)=72.84µs 
+    http_req_tls_handshaking................................................: avg=34.47ms  min=0s       med=0s       max=3.54s  p(90)=41.95ms  p(95)=77.61ms 
+    http_req_waiting........................................................: avg=174.51ms min=62.65ms  med=147.28ms max=3.81s  p(90)=226.59ms p(95)=272.62ms
+    http_reqs...............................................................: 784    6.003933/s
+
+    EXECUTION
+    dropped_iterations......................................................: 1216   9.312223/s
+    iteration_duration......................................................: avg=16.16s   min=917.97ms med=16.27s   max=49.62s p(90)=25.1s    p(95)=28.13s  
+    iterations..............................................................: 784    6.003933/s
+    vus.....................................................................: 8      min=8        max=100
+    vus_max.................................................................: 100    min=100      max=100
+
+    NETWORK
+    data_received...........................................................: 7.6 GB 59 MB/s
+    data_sent...............................................................: 19 MB  148 kB/s
+
+
+  █ SCENARIO: contacts 
+
+    checks_total.......................: 2352   18.0118/s
+    checks_succeeded...................: 66.66% 1568 out of 2352
+    checks_failed......................: 33.33% 784 out of 2352
+
+    ✓ is status 200
+    ✓ is loaded
+    ✗ is cached
+      ↳  0% — ✓ 0 / ✗ 784
+
+    HTTP
+    http_req_blocked...................................: avg=42.02ms  min=0s       med=0s       max=3.6s   p(90)=100.3ms  p(95)=136.92ms
+    http_req_connecting................................: avg=5.53ms   min=0s       med=0s       max=45.6ms p(90)=42.33ms  p(95)=43.6ms  
+    http_req_duration..................................: avg=15.97s   min=896.31ms med=16.09s   max=49.34s p(90)=24.82s   p(95)=27.94s  
+    http_req_failed....................................: 0.00%  0 out of 784
+    http_req_receiving.................................: avg=15.8s    min=759.42ms med=15.93s   max=49.1s  p(90)=24.67s   p(95)=27.75s  
+    http_req_sending...................................: avg=41.19µs  min=16µs     med=33µs     max=1.9ms  p(90)=61µs     p(95)=72.84µs 
+    http_req_tls_handshaking...........................: avg=34.47ms  min=0s       med=0s       max=3.54s  p(90)=41.95ms  p(95)=77.61ms 
+    http_req_waiting...................................: avg=174.51ms min=62.65ms  med=147.28ms max=3.81s  p(90)=226.59ms p(95)=272.62ms
+    http_reqs..........................................: 784    6.003933/s
+
+    EXECUTION
+    dropped_iterations.................................: 1216   9.312223/s
+    iteration_duration.................................: avg=16.16s   min=917.97ms med=16.27s   max=49.62s p(90)=25.1s    p(95)=28.13s  
+    iterations.........................................: 784    6.003933/s
+
+    NETWORK
+    data_received......................................: 7.6 GB 59 MB/s
+    data_sent..........................................: 19 MB  148 kB/s
+
+
+
+
+running (2m10.6s), 000/100 VUs, 784 complete and 0 interrupted iterations
+contacts ✓ [======================================] 100 VUs  2m0s  0784/2000 iters, 20 per VU

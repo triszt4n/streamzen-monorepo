@@ -90,7 +90,7 @@ resource "aws_cloudfront_distribution" "frontend" {
     viewer_protocol_policy = "redirect-to-https"
 
     # Attached policies
-    cache_policy_id            = data.aws_cloudfront_cache_policy.disabled.id
+    cache_policy_id            = aws_cloudfront_cache_policy.one_year.id
     origin_request_policy_id   = data.aws_cloudfront_origin_request_policy.all_no_host.id
     response_headers_policy_id = data.aws_cloudfront_response_headers_policy.cors.id
 

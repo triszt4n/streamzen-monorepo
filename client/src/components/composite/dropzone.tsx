@@ -33,15 +33,8 @@ export function Dropzone({ onChange, className, ...props }: DropzoneProps) {
 
   const handleFiles = (files: FileList) => {
     const uploadedFile = files[0]
-
-    // if (fileExtension && !uploadedFile.name.endsWith(`.${fileExtension}`)) {
-    //   setError(`Invalid file type. Expected: .${fileExtension}`)
-    //   return
-    // }
-
     const fileSizeInKB = Math.round(uploadedFile.size / 1024)
     onChange(() => Array.from(files))
-
     setFileInfo(`Feltöltendő: ${uploadedFile.name} (${fileSizeInKB} KB)`)
     setError(null)
   }
