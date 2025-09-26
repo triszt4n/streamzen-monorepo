@@ -34,7 +34,7 @@
     "@nestjs/mapped-types": "2.0.5",
     "@nestjs/passport": "10.0.3",
     "@nestjs/platform-express": "10.4.4",
-    "@nestjs/schedule": "4.1.1",
+    "@nestjs/schedule": "4.1.2",
     "@nestjs/swagger": "7.4.2",
     "@prisma/client": "5.20.0",
     "cache-manager": "5.6.1",
