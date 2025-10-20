@@ -16,11 +16,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get all directories with terragrunt.hcl
-        id: set
+        id: find
         run: |
-          echo "matrix=$(find * -mindepth 1 -name terragrunt.hcl -exec dirname {} \; |
+          echo "find=$(find * -mindepth 1 -name terragrunt.hcl -exec dirname {} \; |
             jq -Rc '[.,inputs] | map({path: ., name: split("/")|join("_")})' |
             sed 's/"/\\"/g')" >> $GITHUB_OUTPUT
+
+      - name: Get all directories with terragrunt.hcl
+        id: set
+        run: |
+          echo "matrix=${{ steps.find.outputs.find }}" >> $GITHUB_OUTPUT
 
     outputs:
       matrix: ${{ steps.set.outputs.matrix }}
