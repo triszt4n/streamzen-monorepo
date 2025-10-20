@@ -1,0 +1,26 @@
+name: Build hcl file matrix
+
+on:
+  workflow_call:
+    outputs:
+      matrix:
+        description: Matrix of directories with terragrunt.hcl files
+        value: ${{ jobs.build_matrix.outputs.matrix }}
+
+jobs:
+  build_matrix:
+    name: Build matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get all directories with terragrunt.hcl
+        id: set
+        run: |
+          echo "matrix=$(find * -mindepth 1 -name terragrunt.hcl -exec dirname {} \; |
+            jq -Rc '[.,inputs] | map({path: ., name: split("/")|join("_")})' |
+            sed 's/"/\\"/g')" >> $GITHUB_OUTPUT
+
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
