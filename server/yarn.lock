@@ -3912,15 +3912,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cache-manager@npm:5.6.1":
-  version: 5.6.1
-  resolution: "cache-manager@npm:5.6.1"
+"cache-manager@npm:5.7.6":
+  version: 5.7.6
+  resolution: "cache-manager@npm:5.7.6"
   dependencies:
     eventemitter3: "npm:^5.0.1"
     lodash.clonedeep: "npm:^4.5.0"
     lru-cache: "npm:^10.2.2"
     promise-coalesce: "npm:^1.1.2"
-  checksum: 10c0/31e8818ee1e64fbc69dc18d0cf7f55cf760d83f3a9fc7ee4feb12041274bea9e9d4883097d83df3fefad2b780a141ae36e47f87e78da3ec3ce6ffe512b2989b1
+  checksum: 10c0/fdf99c4cb3682187fd57f5b7053573dae91800f57f785c7644e5b923d4146833ab600759678eb1a5a94be74db9301850a0ff4391fc97cffd89a0f13ae4358175
   languageName: node
   linkType: hard
 
@@ -8170,7 +8170,7 @@ __metadata:
     "@types/passport-oauth2": "npm:1.4.17"
     "@types/supertest": "npm:6.0.2"
     "@typescript-eslint/parser": "npm:8.7.0"
-    cache-manager: "npm:5.6.1"
+    cache-manager: "npm:5.7.6"
     class-transformer: "npm:0.5.1"
     class-validator: "npm:0.14.1"
     crypto: "npm:1.0.1"
